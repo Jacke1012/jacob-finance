@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+    environment:
+      - DB_HOST=mariadb
+      - DB_NAME=finance
+      - DB_USER=financeuser
+      - DB_PASS=supersecret
+
+  mariadb:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_DATABASE: finance
+      MYSQL_USER: financeuser
+      MYSQL_PASSWORD: supersecret
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
