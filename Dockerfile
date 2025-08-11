@@ -24,5 +24,14 @@ COPY docker/nginx-default.conf /etc/nginx/sites-available/default
 # Supervisor to run both in one container
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Copy entrypoint
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 80
-CMD ["supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+# Start via entrypoint so the drop-in is created before php-fpm starts
+CMD ["/entrypoint.sh"]
+
+
+#CMD ["supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
