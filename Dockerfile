@@ -1,34 +1,28 @@
-# Ubuntu-only, using default packages (NGINX, PHP-FPM 8.3, Supervisor)
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install default packages (no third-party repos)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    nginx \
-    php-fpm \
-    php-mysql \
-    supervisor \
-    ca-certificates \
-    tzdata \
+    nginx php-fpm php-mysql supervisor ca-certificates tzdata \
  && rm -rf /var/lib/apt/lists/*
 
-# Make NGINX logs go to container stdout/stderr
+# Let PHP-FPM see env vars from Kubernetes
+RUN sed -ri 's@^;?\s*clear_env\s*=\s*yes@clear_env = no@' /etc/php/8.3/fpm/pool.d/www.conf
+
+# Stream NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
  && ln -sf /dev/stderr /var/log/nginx/error.log
 
-# Copy app
+# App
 WORKDIR /var/www/html
 COPY . /var/www/html
+#RUN chown -R www-data:www-data /var/www/html
 
-# Set sane ownership for web root
-RUN chown -R www-data:www-data /var/www/html
-
-# NGINX & Supervisor configs
+# NGINX site (uses default PHP-FPM socket)
 COPY docker/nginx-default.conf /etc/nginx/sites-available/default
+
+# Supervisor to run both in one container
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 80
-
-# Run both services via Supervisor in foreground
 CMD ["supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
