@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 # Let PHP-FPM see env vars from Kubernetes
-RUN sed -ri 's@^;?\s*clear_env\s*=\s*yes@clear_env = no@' /etc/php/8.3/fpm/pool.d/www.conf
+RUN sed -ri 's@^;?\s*clear_env\s*=\s*yes@clear_env = no@' /etc/php/8.4/fpm/pool.d/www.conf
 
 # Stream NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
