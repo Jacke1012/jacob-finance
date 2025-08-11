@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Write a pool drop-in so php-fpm always sees your k8s env vars
-cat >/etc/php/8.3/fpm/pool.d/zz-env.conf <<EOF
+cat >/etc/php/8.4/fpm/pool.d/zz-env.conf <<EOF
 [www]
 clear_env = no
 env[DB_HOST] = ${DB_HOST:-mysql}
