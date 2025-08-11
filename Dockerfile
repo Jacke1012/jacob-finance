@@ -1,18 +1,37 @@
-FROM php:8.4-fpm
+FROM ubuntu:24.04
 
-# Install NGINX and Supervisor
-RUN apt-get update && apt-get install -y nginx supervisor \
-    && docker-php-ext-install mysqli pdo pdo_mysql
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Copy app files into container
-COPY . /var/www/html
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nginx php-fpm php-mysql supervisor ca-certificates tzdata \
+ && rm -rf /var/lib/apt/lists/*
 
-# Copy config files
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Let PHP-FPM see env vars from Kubernetes
+RUN sed -ri 's@^;?\s*clear_env\s*=\s*yes@clear_env = no@' /etc/php/8.3/fpm/pool.d/www.conf
 
+# Stream NGINX logs to stdout/stderr
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+ && ln -sf /dev/stderr /var/log/nginx/error.log
+
+# App
 WORKDIR /var/www/html
+COPY . /var/www/html
+#RUN chown -R www-data:www-data /var/www/html
+
+# NGINX site (uses default PHP-FPM socket)
+COPY docker/nginx-default.conf /etc/nginx/sites-available/default
+
+# Supervisor to run both in one container
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copy entrypoint
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord"]
+# Start via entrypoint so the drop-in is created before php-fpm starts
+CMD ["/entrypoint.sh"]
+
+
+#CMD ["supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
