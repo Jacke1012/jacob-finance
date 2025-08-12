@@ -1,37 +1,28 @@
-FROM ubuntu:25.10
+# syntax=docker/dockerfile:1
+FROM alpine:latest
 
-ENV DEBIAN_FRONTEND=noninteractive
+# Tiny runtime
+RUN apk add --no-cache \
+    nginx php83 php83-fpm php83-opcache supervisor \
+    php83-mysqli php83-pdo_mysql
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    nginx php-fpm php-mysql supervisor ca-certificates tzdata \
- && rm -rf /var/lib/apt/lists/*
+# Runtime dirs + logs to stderr for php-fpm
+RUN set -eux; \
+    mkdir -p /var/log/nginx /run/nginx /run/php /var/www; \
+    rm -f /etc/nginx/http.d/default.conf || true; \
+    sed -i 's|^error_log = .*|error_log = /dev/stderr|' /etc/php83/php-fpm.conf
 
-# Let PHP-FPM see env vars from Kubernetes
-RUN sed -ri 's@^;?\s*clear_env\s*=\s*yes@clear_env = no@' /etc/php/8.4/fpm/pool.d/www.conf
-
-# Stream NGINX logs to stdout/stderr
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
- && ln -sf /dev/stderr /var/log/nginx/error.log
+# Configs
+COPY config/nginx.conf                 /etc/nginx/nginx.conf
+COPY config/supervisord.conf           /etc/supervisord.conf
+COPY config/php-fpm.d/www.conf         /etc/php83/php-fpm.d/www.conf
+COPY config/php-fpm.d/zz-env.conf      /etc/php83/php-fpm.d/zz-env.conf
 
 # App
-WORKDIR /var/www/html
-COPY . /var/www/html
-#RUN chown -R www-data:www-data /var/www/html
+COPY app /var/www
 
-# NGINX site (uses default PHP-FPM socket)
-COPY docker/nginx-default.conf /etc/nginx/sites-available/default
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:8080/ >/dev/null || exit 1
 
-# Supervisor to run both in one container
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Copy entrypoint
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-EXPOSE 80
-
-# Start via entrypoint so the drop-in is created before php-fpm starts
-CMD ["/entrypoint.sh"]
-
-
-#CMD ["supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
