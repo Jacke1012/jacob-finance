@@ -88,7 +88,9 @@ RUN apk add --no-cache \
       php83 \
       php83-fpm \
       php83-opcache \
-      supervisor
+      supervisor \
+      php83-mysqli \
+      php83-pdo_mysql
 
 # Create runtime dirs
 RUN set -eux; \
@@ -102,8 +104,8 @@ RUN set -eux; \
 COPY --from=basefiles /opt/etc/nginx.conf /etc/nginx/nginx.conf
 COPY --from=basefiles /opt/etc/php/php-fpm.d/www.conf /etc/php83/php-fpm.d/www.conf
 COPY --from=basefiles /opt/etc/supervisord.conf /etc/supervisord.conf
-WORKDIR /var/www/html
-COPY . /var/www/html
+COPY --from=basefiles /app /var/www
+
 # PHP-FPM expects a main config; the package provides it.
 # Ensure php-fpm logs go to stderr/stdout via pool settings (already set).
 
