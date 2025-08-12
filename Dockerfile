@@ -102,8 +102,8 @@ RUN set -eux; \
 COPY --from=basefiles /opt/etc/nginx.conf /etc/nginx/nginx.conf
 COPY --from=basefiles /opt/etc/php/php-fpm.d/www.conf /etc/php83/php-fpm.d/www.conf
 COPY --from=basefiles /opt/etc/supervisord.conf /etc/supervisord.conf
-COPY --from=basefiles /app /var/www
-
+WORKDIR /var/www/html
+COPY . /var/www/html
 # PHP-FPM expects a main config; the package provides it.
 # Ensure php-fpm logs go to stderr/stdout via pool settings (already set).
 
