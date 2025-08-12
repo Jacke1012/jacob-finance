@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM alpine:3.20
+FROM alpine:latest
 
 # Tiny runtime
 RUN apk add --no-cache \
