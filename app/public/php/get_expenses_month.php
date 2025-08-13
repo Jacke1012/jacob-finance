@@ -1,26 +1,64 @@
 <?php
-include 'db_connect.php'; // Include your DB connection
+include 'db_connect.php'; // should define $conn and $mysql
 
-$year = $_GET['year'];
-$month = $_GET['month'];
-//$date_one = $_GET['date_one'];
-//$date_two = $_GET['date_two'];
-//error_log($date_two);
-
-$sql = $conn->prepare("SELECT * FROM expenses WHERE YEAR(date_time) = ? AND MONTH(date_time) = ? ORDER BY date_time DESC");
-//$sql = $conn->prepare("SELECT * FROM expenses WHERE date_time BETWEEN ? AND ? ORDER BY date_time DESC");
-$sql->bind_param("ii", $year, $month); // 'ii' specifies that both parameters are integers
-//$sql->bind_param("ss", $date_one, $date_two);
-$sql->execute();
-$result = $sql->get_result();
-
-$expenses = array();
-while($row = $result->fetch_assoc()) {
-    $expenses[] = $row;
-}
+$year  = $_GET['year']  ?? null;
+$month = $_GET['month'] ?? null;
 
 header('Content-Type: application/json');
-echo json_encode($expenses);
 
-$conn->close();
-?>
+// Basic validation
+if (!is_numeric($year) || !is_numeric($month)) {
+    echo json_encode(["error" => "Invalid parameters"]);
+    exit;
+}
+
+if ($mysql === true) {
+    // MySQL branch
+    $stmt = $conn->prepare(
+        "SELECT * FROM expenses 
+         WHERE YEAR(date_time) = ? AND MONTH(date_time) = ? 
+         ORDER BY date_time DESC"
+    );
+    $stmt->bind_param("ii", $year, $month);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $expenses = [];
+    while ($row = $result->fetch_assoc()) {
+        $expenses[] = $row;
+    }
+
+    echo json_encode($expenses);
+
+    $stmt->close();
+    $conn->close();
+
+} else {
+    // PostgreSQL branch
+    // normalize possible "YYYY-MM-DDTHH:MM:SS"
+    if (strpos($date_one, 'T') !== false) $date_one = str_replace('T', ' ', $date_one);
+    if (strpos($date_two, 'T') !== false) $date_two = str_replace('T', ' ', $date_two);
+
+    // explicit casts avoid “text → timestamp” ambiguity
+    $sql = "
+        SELECT *
+        FROM expenses
+        WHERE date_time BETWEEN $1::timestamp AND $2::timestamp
+        ORDER BY date_time DESC
+    ";
+
+    $result = pg_query_params($conn, $sql, [$date_one, $date_two]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
+
+    $expenses = [];
+    while ($row = pg_fetch_assoc($result)) {
+        $expenses[] = $row;
+    }
+
+    echo json_encode($expenses);
+    pg_close($conn);
+}

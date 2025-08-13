@@ -1,6 +1,6 @@
 <?php
 echo "<pre>";
-echo "DB_HOST=" . getenv('DB_HOST') . "\n";
+echo "MYSQL_BOOL=" . getenv('MYSQL_BOOL') . "\n";
 echo "DB_NAME=" . getenv('DB_NAME') . "\n";
 //echo "DB_USER=" . getenv('DB_USER') . "\n";
 //echo "DB_PASS=" . getenv('DB_PASS') . "\n";

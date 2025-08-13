@@ -4,7 +4,7 @@ FROM alpine:latest
 # Tiny runtime
 RUN apk add --no-cache \
     nginx php83 php83-fpm php83-opcache supervisor \
-    php83-mysqli
+    php83-mysqli php83-pgsql
 
 # Runtime dirs + logs to stderr for php-fpm
 RUN set -eux; \

@@ -1,31 +1,54 @@
 <?php
-// Include the database connection file
-include 'db_connect.php';
+include 'db_connect.php'; // defines $conn and $mysql
 
-// Check if the id POST variable is set
+header('Content-Type: application/json');
+
 if (isset($_POST['id'])) {
     $expenseId = $_POST['id'];
 
-    // Prepare a delete statement
-    $sql = $conn->prepare("DELETE FROM expenses WHERE id = ?");
-    $sql->bind_param("i", $expenseId); // 'i' specifies the variable type is integer
+    if ($mysql === true) {
+        // MySQL branch
+        $stmt = $conn->prepare("DELETE FROM expenses WHERE id = ?");
+        $stmt->bind_param("i", $expenseId);
 
-    // Attempt to execute the prepared statement
-    if ($sql->execute()) {
-        // If the query was successful
-        echo json_encode(array("statusCode" => 200, "message" => "Expense deleted successfully."));
+        if ($stmt->execute()) {
+            echo json_encode([
+                "statusCode" => 200,
+                "message" => "Expense deleted successfully."
+            ]);
+        } else {
+            echo json_encode([
+                "statusCode" => 500,
+                "message" => "Error deleting expense."
+            ]);
+        }
+
+        $stmt->close();
+        $conn->close();
+
     } else {
-        // If the query failed
-        echo json_encode(array("statusCode" => 500, "message" => "Error deleting expense."));
+        // PostgreSQL branch
+        $sql = "DELETE FROM expenses WHERE id = $1";
+        $result = pg_query_params($conn, $sql, [$expenseId]);
+
+        if ($result) {
+            echo json_encode([
+                "statusCode" => 200,
+                "message" => "Expense deleted successfully."
+            ]);
+        } else {
+            echo json_encode([
+                "statusCode" => 500,
+                "message" => "Error deleting expense: " . pg_last_error($conn)
+            ]);
+        }
+
+        pg_close($conn);
     }
 
-    // Close statement
-    $sql->close();
 } else {
-    // If the required data was not provided
-    echo json_encode(array("statusCode" => 400, "message" => "Expense ID not provided."));
+    echo json_encode([
+        "statusCode" => 400,
+        "message" => "Expense ID not provided."
+    ]);
 }
-
-// Close connection
-$conn->close();
-?>
