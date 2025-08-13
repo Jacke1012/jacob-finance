@@ -11,6 +11,7 @@ services:
       - DB_NAME=finance
       - DB_USER=financeuser
       - DB_PASS=supersecret
+      - MYSQL_BOOL=true
 
   mariadb:
     image: mariadb:10.5

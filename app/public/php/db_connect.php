@@ -15,7 +15,10 @@ $db = getenv('DB_NAME') ?: 'finance';
 $user = getenv('DB_USER') ?: 'financeuser';
 $pass = getenv('DB_PASS') ?: 'supersecret';
 
+#$mysql = getenv('MYSQL_BOOL') ?: false;
+
 $mysql = false;
+
 
 if ($mysql === true){
   $conn = new mysqli($mysqlhost, $user, $pass, $db);
