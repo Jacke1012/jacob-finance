@@ -6,7 +6,8 @@ services:
     depends_on:
       - mariadb
     environment:
-      - DB_HOST=postgresql
+      - POSTGRES_HOST=postgresql
+      - MYSQL_HOST=mariadb
       - DB_NAME=finance
       - DB_USER=financeuser
       - DB_PASS=supersecret

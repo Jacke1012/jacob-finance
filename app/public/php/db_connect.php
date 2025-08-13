@@ -9,7 +9,8 @@
 
 //$conn = new mysqli("mariadb", "user", "pass", "database");
 
-$host = getenv('DB_HOST') ?: 'localhost';
+$postgreshost = getenv('POSTGRES_HOST') ?: 'localhost';
+$mysqlhost = getenv('MYSQL_HOST') ?: 'localhost';
 $db = getenv('DB_NAME') ?: 'finance';
 $user = getenv('DB_USER') ?: 'financeuser';
 $pass = getenv('DB_PASS') ?: 'supersecret';
@@ -17,7 +18,7 @@ $pass = getenv('DB_PASS') ?: 'supersecret';
 $mysql = false;
 
 if ($mysql === true){
-  $conn = new mysqli($host, $user, $pass, $db);
+  $conn = new mysqli($mysqlhost, $user, $pass, $db);
 
   // Check connection
   if ($conn->connect_error) {
@@ -39,7 +40,7 @@ if ($mysql === true){
       die("Error creating expenses table: " . $conn->error);
   }
 } else{
-  $conn = pg_connect("host=$host dbname=$db user=$user password=$pass");
+  $conn = pg_connect("host=$postgreshost dbname=$db user=$user password=$pass");
 
   if (!$conn) {
       die("Connection failed: " . pg_last_error());
