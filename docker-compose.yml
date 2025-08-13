@@ -1,12 +1,12 @@
 services:
-  app:
+  finance-app:
     build: .
     ports:
       - "8080:8080"
     depends_on:
       - mariadb
     environment:
-      - DB_HOST=mariadb
+      - DB_HOST=postgresql
       - DB_NAME=finance
       - DB_USER=financeuser
       - DB_PASS=supersecret
@@ -22,7 +22,20 @@ services:
       MYSQL_PASSWORD: supersecret
       MYSQL_ROOT_PASSWORD: rootpass
     volumes:
-      - db_data:/var/lib/mysql
+      - db_mysql:/var/lib/mysql
+
+  postgresql:
+    image: postgres:bookworm
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_DB: finance
+      POSTGRES_USER: financeuser
+      POSTGRES_PASSWORD: supersecret
+    volumes:
+      - db_postgres:/var/lib/postgresql/data
 
 volumes:
-  db_data:
+  db_mysql:
+  db_postgres:

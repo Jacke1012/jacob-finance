@@ -1,26 +1,59 @@
 <?php
-include 'db_connect.php'; // Include your DB connection
+include 'db_connect.php'; // should define $conn and $mysql
 
-//$year = $_GET['year'];
-//$month = $_GET['month'];
-$date_one = $_GET['date_one'];
-$date_two = $_GET['date_two'];
-//error_log($date_two);
-
-//$sql = $conn->prepare("SELECT * FROM expenses WHERE YEAR(date_time) = ? AND MONTH(date_time) = ? AND date_time BETWEEN ? AND ? ORDER BY date_time ASC");
-$sql = $conn->prepare("SELECT * FROM expenses WHERE date_time BETWEEN ? AND ? ORDER BY date_time DESC");
-//$sql->bind_param("iiss", $year, $month, $date_one, $date_two); // 'ii' specifies that both parameters are integers
-$sql->bind_param("ss", $date_one, $date_two);
-$sql->execute();
-$result = $sql->get_result();
-
-$expenses = array();
-while($row = $result->fetch_assoc()) {
-    $expenses[] = $row;
-}
+$date_one = $_GET['date_one'] ?? null;
+$date_two = $_GET['date_two'] ?? null;
 
 header('Content-Type: application/json');
-echo json_encode($expenses);
 
-$conn->close();
-?>
+// Basic validation (optional)
+if (!$date_one || !$date_two) {
+    echo json_encode(["error" => "Missing date parameters"]);
+    exit;
+}
+
+if ($mysql === true) {
+    // MySQL branch
+    $stmt = $conn->prepare(
+        "SELECT * FROM expenses 
+         WHERE date_time BETWEEN ? AND ? 
+         ORDER BY date_time DESC"
+    );
+    $stmt->bind_param("ss", $date_one, $date_two);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $expenses = [];
+    while ($row = $result->fetch_assoc()) {
+        $expenses[] = $row;
+    }
+
+    echo json_encode($expenses);
+
+    $stmt->close();
+    $conn->close();
+
+} else {
+    // PostgreSQL branch
+    $sql = "
+        SELECT * FROM expenses
+        WHERE date_time BETWEEN $1 AND $2
+        ORDER BY date_time DESC
+    ";
+
+    $result = pg_query_params($conn, $sql, [$date_one, $date_two]);
+
+    $expenses = [];
+    if ($result) {
+        while ($row = pg_fetch_assoc($result)) {
+            $expenses[] = $row;
+        }
+    } else {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
+
+    echo json_encode($expenses);
+    pg_close($conn);
+}
