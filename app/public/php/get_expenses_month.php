@@ -36,18 +36,18 @@ if ($mysql === true) {
 } else {
     // PostgreSQL branch
     // normalize possible "YYYY-MM-DDTHH:MM:SS"
-    if (strpos($date_one, 'T') !== false) $date_one = str_replace('T', ' ', $date_one);
-    if (strpos($date_two, 'T') !== false) $date_two = str_replace('T', ' ', $date_two);
+    //if (strpos($date_one, 'T') !== false) $date_one = str_replace('T', ' ', $date_one);
+    //if (strpos($date_two, 'T') !== false) $date_two = str_replace('T', ' ', $date_two);
 
     // explicit casts avoid “text → timestamp” ambiguity
     $sql = "
-        SELECT *
-        FROM expenses
-        WHERE date_time BETWEEN $1::timestamp AND $2::timestamp
+        SELECT * FROM expenses
+        WHERE date_time >= make_date($1::int, $2::int, 1)
+        AND date_time <  (make_date($1::int, $2::int, 1) + INTERVAL '1 month')
         ORDER BY date_time DESC
     ";
 
-    $result = pg_query_params($conn, $sql, [$date_one, $date_two]);
+    $result = pg_query_params($conn, $sql, [$year, $month]);
     if (!$result) {
         echo json_encode(["error" => pg_last_error($conn)]);
         pg_close($conn);

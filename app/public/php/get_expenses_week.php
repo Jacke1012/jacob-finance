@@ -36,8 +36,8 @@ if ($mysql === true) {
 } else {
     // PostgreSQL branch
     // normalize possible "YYYY-MM-DDTHH:MM:SS"
-    if (strpos($date_one, 'T') !== false) $date_one = str_replace('T', ' ', $date_one);
-    if (strpos($date_two, 'T') !== false) $date_two = str_replace('T', ' ', $date_two);
+    //if (strpos($date_one, 'T') !== false) $date_one = str_replace('T', ' ', $date_one);
+    //if (strpos($date_two, 'T') !== false) $date_two = str_replace('T', ' ', $date_two);
 
     // explicit casts avoid “text → timestamp” ambiguity
     $sql = "

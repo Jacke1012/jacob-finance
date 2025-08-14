@@ -4,8 +4,8 @@ FROM alpine:latest
 # Tiny runtime
 RUN apk add --no-cache \
     nginx php83 php83-fpm php83-opcache supervisor \
-    php83-mysqli php83-pgsql
-
+    php83-pgsql
+#php83-mysqli
 # Runtime dirs + logs to stderr for php-fpm
 RUN set -eux; \
     mkdir -p /var/log/nginx /run/nginx /run/php /var/www; \
@@ -13,10 +13,11 @@ RUN set -eux; \
     sed -i 's|^error_log = .*|error_log = /dev/stderr|' /etc/php83/php-fpm.conf
 
 # Configs
-COPY config/nginx.conf                 /etc/nginx/nginx.conf
-COPY config/supervisord.conf           /etc/supervisord.conf
-COPY config/php-fpm.d/www.conf         /etc/php83/php-fpm.d/www.conf
-COPY config/php-fpm.d/zz-env.conf      /etc/php83/php-fpm.d/zz-env.conf
+COPY config/nginx.conf                  /etc/nginx/nginx.conf
+COPY config/supervisord.conf            /etc/supervisord.conf
+COPY config/php-fpm.d/www.conf          /etc/php83/php-fpm.d/www.conf
+COPY config/php-fpm.d/zz-env.conf       /etc/php83/php-fpm.d/zz-env.conf
+COPY config/99-opcache.ini              /etc/php83/conf.d/99-opcache.ini
 
 # App
 COPY app /var/www
