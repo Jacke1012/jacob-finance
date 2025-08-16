@@ -8,12 +8,59 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="manifest" href="/manifest.json">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <meta name="color-scheme" content="dark">
+    <meta id="theme-color" name="theme-color" content="#0b0b10">
+    <style>
+        /* Theme variables */
+        :root {
+        --bg: #0b0b10;
+        --fg: #e9e9f1;
+        --muted: #b3b3be;
+        --card: #14141b;
+        --border: #2a2a35;
+        --primary: #7ab3ff;
+        --primary-contrast: #0b0b10;
+        --table-stripe: #171722;
+        --input-bg: #111118;
+        }
+
+        body {
+        background: var(--bg);
+        color: var(--fg);
+        }
+        h1, h2, h3, h4, h5, h6 { color: var(--fg); }
+
+        .btn-primary {
+        background-color: var(--primary) !important;
+        border-color: var(--primary) !important;
+        color: var(--primary-contrast) !important;
+        }
+        .container { padding-top: 20px; }
+        .form-control, .custom-select {
+        background-color: var(--input-bg);
+        color: var(--fg);
+        border-color: var(--border);
+        }
+        .form-control:focus, .custom-select:focus {
+        background-color: var(--input-bg);
+        color: var(--fg);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(122,179,255,0.25);
+        }
+        label { color: var(--fg); }
+
+        table.table { color: var(--fg); background: var(--card); border-color: var(--border); }
+        .table thead th { border-bottom-color: var(--border); }
+        .table td, .table th { border-top-color: var(--border); }
+        .table-striped tbody tr:nth-of-type(odd) { background-color: var(--table-stripe); }
+    </style>
 </head>
 
 <body>
 
     <div class="container">
-        <h2>Add New Expense</h2>
+        <h2>Finance</h2>
         <form id="expense-form">
             <div class="form-group">
                 <label for="date_time">Date and Time:</label> <button id="refresh-date" type="button"
