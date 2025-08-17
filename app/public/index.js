@@ -92,6 +92,25 @@ $(document).ready(function () {
         }
     }
 
+    function editExpense(expenseId) {
+        if (confirm("Are you sure you want to edit this expense?")) {
+            $.ajax({
+                url: '../php/edit_expense.php',
+                type: 'GET',
+                dataType: 'json',
+                data: { id: expenseId },
+                success: function (response) {
+                    $('#date_time').val(response.date_time);
+                    $('#amount').val(response.amount);
+                    $('#description').val(response.description);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error deleting expense: ", error);
+                }
+            });
+        }
+    }
+
 
     function setCurrentTime() {
         $.ajax({
@@ -109,12 +128,9 @@ $(document).ready(function () {
 
     // Function to load expenses
     function loadExpensesWeek(dateInterval) {
-        //console.log(dateInterval[0].toLocaleString("sv-SE"))
         $.ajax({
-            url: '../php/get_expenses_week.php', // You need to replace this with the path to your PHP script
+            url: '../php/get_expenses_week.php', 
             type: 'GET',
-            //data: { year: year, month: month }, // Pass year and month as parameters
-            //data: { year: year, month: month, date_one: dateInterval[0].toLocaleString("sv-SE"), date_two: dateInterval[1].toLocaleString("sv-SE") }, // Pass year and month as parameters
             data: { date_one: dateInterval[0].toLocaleString("sv-SE"), date_two: dateInterval[1].toLocaleString("sv-SE") },
             dataType: 'json',
             success: function (expenses) {
@@ -123,11 +139,17 @@ $(document).ready(function () {
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
-                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.amount + '</td><td>' + expense.description + '</td></tr>');
-                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.amount + '</td><td>' + expense.description + '</td><td><button onclick="editExpense(' + expense.id + ')">Edit</button></td><td><button onclick="deleteExpense(' + expense.id + ')">Delete</button></td></tr>');
-                    $('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.description + '</td><td>' + expense.amount + '</td><td><button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button></td></tr>');
-
-                });
+                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.description + '</td><td>' + expense.amount + '</td><td><button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button></td></tr>');
+                $('#expenses-table tbody').append(
+                    '<tr>' +
+                        '<td>' + expense.date_time + '</td>' +
+                        '<td>' + expense.description + '</td>' +
+                        '<td>' + expense.amount + '</td>' +
+                        '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
+                        '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
+                    '</tr>'
+                );                
+            });
             }
         });
 
@@ -228,6 +250,11 @@ $(document).ready(function () {
         deleteExpense(expenseId);
     });
 
+    $('#expenses-table').on('click', '.edit-expense-btn', function () {
+        var expenseId = $(this).data('id'); // Using data-id attribute to store the expense ID
+        editExpense(expenseId);
+    });
+
     // Handle form submission
     $('#expense-form').submit(function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -244,8 +271,6 @@ $(document).ready(function () {
                 description: description
             },
             success: function (response) {
-                // Optionally, you can check the response to confirm the expense was added successfully
-                //ReloadDisplay(currentDate.getFullYear(), currentDate.getMonth() + 1); // Reload expenses to include the new entry
                 ReloadDisplay();
                 $('#expense-form').trigger('reset'); // Reset form fields
             }

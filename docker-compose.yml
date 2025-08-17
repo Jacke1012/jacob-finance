@@ -4,7 +4,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mariadb
+      - postgresql
     environment:
       - POSTGRES_HOST=postgresql
       - MYSQL_HOST=mariadb

@@ -3,52 +3,35 @@ include 'db_connect.php'; // defines $conn and $mysql
 
 header('Content-Type: application/json');
 
-if (isset($_POST['id'])) {
+if (isset($expenseId)) {
+    $expenseId = $expenseId;
+}
+elseif (isset($_POST['id'])) {
     $expenseId = $_POST['id'];
+}
+else{
+    echo json_encode(["statusCode" => 400, "message" => "Missing expenseId"]);
+    exit;
+}
 
-    if ($mysql === true) {
-        // MySQL branch
-        $stmt = $conn->prepare("DELETE FROM expenses WHERE id = ?");
-        $stmt->bind_param("i", $expenseId);
+$sql = "
+    DELETE
+    FROM expenses
+    WHERE id=$1
+";
 
-        if ($stmt->execute()) {
-            echo json_encode([
-                "statusCode" => 200,
-                "message" => "Expense deleted successfully."
-            ]);
-        } else {
-            echo json_encode([
-                "statusCode" => 500,
-                "message" => "Error deleting expense."
-            ]);
-        }
+$result = pg_query_params($conn, $sql, [$expenseId]);
 
-        $stmt->close();
-        $conn->close();
-
-    } else {
-        // PostgreSQL branch
-        $sql = "DELETE FROM expenses WHERE id = $1";
-        $result = pg_query_params($conn, $sql, [$expenseId]);
-
-        if ($result) {
-            echo json_encode([
-                "statusCode" => 200,
-                "message" => "Expense deleted successfully."
-            ]);
-        } else {
-            echo json_encode([
-                "statusCode" => 500,
-                "message" => "Error deleting expense: " . pg_last_error($conn)
-            ]);
-        }
-
-        pg_close($conn);
-    }
-
+if ($result) {
+    echo json_encode([
+        "statusCode" => 200,
+        "message" => "Expense deleted successfully."
+    ]);
 } else {
     echo json_encode([
-        "statusCode" => 400,
-        "message" => "Expense ID not provided."
+        "statusCode" => 500,
+        "message" => "Error deleting expense: " . pg_last_error($conn)
     ]);
 }
+
+pg_close($conn);
