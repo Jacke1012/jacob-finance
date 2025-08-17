@@ -13,18 +13,18 @@ services:
       - DB_PASS=supersecret
       - MYSQL_BOOL=true
 
-  mariadb:
-    image: mariadb:10.5
-    ports:
-      - "3306:3306"
-    restart: always
-    environment:
-      MYSQL_DATABASE: finance
-      MYSQL_USER: financeuser
-      MYSQL_PASSWORD: supersecret
-      MYSQL_ROOT_PASSWORD: rootpass
-    volumes:
-      - db_mysql:/var/lib/mysql
+  # mariadb:
+  #   image: mariadb:10.5
+  #   ports:
+  #     - "3306:3306"
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: finance
+  #     MYSQL_USER: financeuser
+  #     MYSQL_PASSWORD: supersecret
+  #     MYSQL_ROOT_PASSWORD: rootpass
+  #   volumes:
+  #     - db_mysql:/var/lib/mysql
 
   postgresql:
     image: postgres:bookworm
@@ -39,5 +39,5 @@ services:
       - db_postgres:/var/lib/postgresql/data
 
 volumes:
-  db_mysql:
+  #db_mysql:
   db_postgres:
