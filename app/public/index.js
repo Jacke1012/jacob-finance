@@ -60,6 +60,7 @@ $(document).ready(function () {
 
 
     function ReloadDisplay() {
+        sessionStorage.removeItem("edit_id");
         updateMonthYearDisplay(currentDate);
         updateWeekDisplay(currentDate);
         dateInterval = getWeekDates(currentDate);
@@ -93,22 +94,21 @@ $(document).ready(function () {
     }
 
     function editExpense(expenseId) {
-        if (confirm("Are you sure you want to edit this expense?")) {
-            $.ajax({
-                url: '../php/edit_expense.php',
-                type: 'GET',
-                dataType: 'json',
-                data: { id: expenseId },
-                success: function (response) {
-                    $('#date_time').val(response.date_time);
-                    $('#amount').val(response.amount);
-                    $('#description').val(response.description);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error deleting expense: ", error);
-                }
-            });
-        }
+        $.ajax({
+            url: '../php/edit_expense.php',
+            type: 'GET',
+            dataType: 'json',
+            data: { id: expenseId },
+            success: function (response) {
+                sessionStorage.setItem("edit_id", expenseId);
+                $('#date_time').val(response.date_time);
+                $('#amount').val(response.amount);
+                $('#description').val(response.description);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error deleting expense: ", error);
+            }
+        });
     }
 
 
@@ -262,14 +262,20 @@ $(document).ready(function () {
         var amount = $('#amount').val();
         var description = $('#description').val();
 
+        var dataToSend = {
+        date_time: dateTime,
+        amount: amount,
+        description: description
+        };
+
+        if (sessionStorage.getItem("edit_id")) {
+            dataToSend.edit_id = sessionStorage.getItem("edit_id");
+        }
+
         $.ajax({
             url: '../php/add_expense.php', // Replace with the path to your PHP script for adding an expense
             type: 'POST',
-            data: {
-                date_time: dateTime,
-                amount: amount,
-                description: description
-            },
+            data: dataToSend,
             success: function (response) {
                 ReloadDisplay();
                 $('#expense-form').trigger('reset'); // Reset form fields

@@ -19,7 +19,7 @@ if ($result) {
 }
 pg_close($conn);
 
-ob_start();
-include __DIR__ . '/delete_expense.php';
-ob_end_clean(); 
+//ob_start();
+//include __DIR__ . '/delete_expense.php';
+//ob_end_clean(); 
 ?>
