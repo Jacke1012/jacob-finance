@@ -143,16 +143,16 @@ $(document).ready(function () {
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
                     //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.description + '</td><td>' + expense.amount + '</td><td><button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button></td></tr>');
-                $('#expenses-table tbody').append(
-                    '<tr>' +
-                        '<td>' + expense.date_time + '</td>' +
-                        '<td>' + expense.description + '</td>' +
-                        '<td>' + expense.amount + '</td>' +
-                        '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
-                        '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
-                    '</tr>'
-                );                
-            });
+                    $('#expenses-table tbody').append(
+                        '<tr>' +
+                            '<td>' + expense.date_time + '</td>' +
+                            '<td>' + expense.description + '</td>' +
+                            '<td>' + expense.amount + '</td>' +
+                            '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
+                            '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
+                        '</tr>'
+                    );                
+                });
             }
         });
 
@@ -173,10 +173,16 @@ $(document).ready(function () {
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
-                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.amount + '</td><td>' + expense.description + '</td></tr>');
-                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.amount + '</td><td>' + expense.description + '</td><td><button onclick="editExpense(' + expense.id + ')">Edit</button></td><td><button onclick="deleteExpense(' + expense.id + ')">Delete</button></td></tr>');
-                    $('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.description + '</td><td>' + expense.amount + '</td><td><button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button></td></tr>');
-
+                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.description + '</td><td>' + expense.amount + '</td><td><button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button></td></tr>');
+                    $('#expenses-table tbody').append(
+                        '<tr>' +
+                            '<td>' + expense.date_time + '</td>' +
+                            '<td>' + expense.description + '</td>' +
+                            '<td>' + expense.amount + '</td>' +
+                            '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
+                            '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
+                        '</tr>'
+                    );                
                 });
             }
         });
