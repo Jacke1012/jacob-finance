@@ -72,6 +72,9 @@ $(document).ready(function () {
             loadExpensesMonth(currentDate.getFullYear(), currentDate.getMonth() + 1)
         }
 
+        $('#amount').val("");
+        $('#description').val("");
+
     }
 
 
