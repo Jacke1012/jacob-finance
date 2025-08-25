@@ -1,6 +1,9 @@
 <?php
 include 'db_connect.php'; // defines $conn and $mysql
 
+header('Cache-Control: public, max-age=60');
+
+
 $date_one = $_GET["date_one"] ?? null;
 $date_two = $_GET["date_two"] ?? null;
 

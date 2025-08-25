@@ -9,6 +9,8 @@
 
 //$conn = new mysqli("mariadb", "user", "pass", "database");
 
+
+
 $postgreshost = getenv('POSTGRES_HOST') ?: 'localhost';
 $mysqlhost = getenv('MYSQL_HOST') ?: 'localhost';
 $db = getenv('DB_NAME') ?: 'finance';
