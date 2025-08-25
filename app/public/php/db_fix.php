@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     date_time TIMESTAMP NOT NULL,
     amount NUMERIC(10,2) NOT NULL,
     description VARCHAR(255) NULL,
-    compnay VARCHAR(255) NULL
+    company VARCHAR(255) NULL
 );
 ";
 
