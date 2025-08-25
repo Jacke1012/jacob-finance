@@ -18,52 +18,61 @@ $pass = getenv('DB_PASS') ?: 'supersecret';
 
 #$mysql = getenv('MYSQL_BOOL') ?: false;
 
-$mysql = false;
 
+$conn = pg_connect("host=$postgreshost dbname=$db user=$user password=$pass");
 
-if ($mysql === true){
-  $conn = new mysqli($mysqlhost, $user, $pass, $db);
-
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-
-  $createExpensesTableMySql = "
-  CREATE TABLE IF NOT EXISTS expenses (
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    date_time DATETIME NOT NULL,
-    amount DECIMAL(10,2) NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-  );
-  ";
-
-  
-  if ($conn->query($createExpensesTableMySql) === FALSE) {
-      die("Error creating expenses table: " . $conn->error);
-  }
-} else{
-  $conn = pg_connect("host=$postgreshost dbname=$db user=$user password=$pass");
-
-  if (!$conn) {
-      die("Connection failed: " . pg_last_error());
-  }
-
-  $createExpensesTablePostgres = "
-  CREATE TABLE IF NOT EXISTS expenses (
-      id SERIAL PRIMARY KEY,
-      date_time TIMESTAMP NOT NULL,
-      amount NUMERIC(10,2) NOT NULL,
-      description VARCHAR(255) NOT NULL
-  );
-  ";
-
-  $result = pg_query($conn, $createExpensesTablePostgres);
-
-  if (!$result) {
-      die("Error creating expenses table: " . pg_last_error($conn));
-  }
+if (!$conn) {
+    die("Connection failed: " . pg_last_error());
 }
+
+
+
+
+$createExpensesTablePostgres = "
+CREATE TABLE IF NOT EXISTS expenses (
+    id SERIAL PRIMARY KEY,
+    date_time TIMESTAMP NOT NULL,
+    amount NUMERIC(10,2) NOT NULL,
+    description VARCHAR(255) NULL,
+    compnay VARCHAR(255) NULL
+);
+";
+
+// $createExpensesTablePostgres = "
+// CREATE TABLE IF NOT EXISTS expenses (
+//     id SERIAL PRIMARY KEY,
+//     date_time TIMESTAMP NOT NULL,
+//     amount NUMERIC(10,2) NOT NULL,
+//     description VARCHAR(255) NOT NULL
+// );
+// ";
+
+$result = pg_query($conn, $createExpensesTablePostgres);
+
+if (!$result) {
+    die("Error creating expenses table: " . pg_last_error($conn));
+}
+
+
+$alterTable = "
+  ALTER TABLE expenses ADD COLUMN IF NOT EXISTS company VARCHAR(255);
+  ";
+
+$result = pg_query($conn, $alterTable);
+
+if (!$result) {
+    die("Error altering expenses table: " . pg_last_error($conn));
+}
+
+$alterTable = "
+  ALTER TABLE expenses ALTER COLUMN description DROP NOT NULL;
+  ";
+
+$result = pg_query($conn, $alterTable);
+
+if (!$result) {
+    die("Error altering expenses table: " . pg_last_error($conn));
+}
+
 
 ?>
