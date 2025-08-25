@@ -48,7 +48,6 @@ self.addEventListener('fetch', function (event) {
     }
   }
   else if (event.request.method === "GET") {
-
     event.respondWith(
       fetch(event.request).then(function (response) {
         // Check if we received a valid response
