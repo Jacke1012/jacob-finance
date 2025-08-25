@@ -66,7 +66,8 @@ self.addEventListener('fetch', function (event) {
 
         return response;
       }).catch(function () {
-        if (event.request.url === "https://finance.jjhome.se/php/currentTime.php") {
+        let url = new URL(event.request.url);
+        if (url.pathname === "/php/currentTime.php") {
           //console.log(event.request.url)
           let date_now = new Date(Date.now());
           //console.log(date_now.toLocaleString("sv-SE"))
