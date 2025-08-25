@@ -46,13 +46,14 @@
 
         .container {
             flex: 1 1 auto;  
+            flex-direction: column;
             width: max-content;
             min-width: 0;  
+            max-width: none;
             padding-top: 20px; 
         }
 
-        .container table { width: 100%; table-layout: auto; word-break: break-word; }
-        .container .table-wrap { overflow-x: auto; } 
+        .container table { width: max-content; word-break: break-word; }
 
 
         .form-control, .custom-select {
@@ -78,9 +79,9 @@
 
 <body>
 
-    <div class="container" style="display: flex;flex-direction: column; width: max-content;">
+    <div class="container">
         <h2>Finance</h2>
-        <div style="display: flex;flex-direction: column;">
+        <div>
             <form id="expense-form">
                 <div class="form-group">
                     <label for="date_time">Date and Time:</label> <button id="refresh-date" type="button"
