@@ -129,10 +129,13 @@ $(document).ready(function () {
             dataType: 'json',
             data: { id: expenseId },
             success: function (response) {
+                let description = response.description ?? '';
+                let company = response.company ?? '';
                 sessionStorage.setItem("edit_id", expenseId);
                 $('#date_time').val(response.date_time);
                 $('#amount').val(response.amount);
-                $('#description').val(response.description);
+                $('#company').val(company)
+                $('#description').val(description);
             },
             error: function (xhr, status, error) {
                 console.error("Error deleting expense: ", error);
@@ -201,11 +204,13 @@ $(document).ready(function () {
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
-                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.description + '</td><td>' + expense.amount + '</td><td><button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button></td></tr>');
+                    let description = expense.description ?? '';
+                    let company = expense.company ?? '';
                     $('#expenses-table tbody').append(
                         '<tr>' +
                             '<td>' + expense.date_time + '</td>' +
-                            '<td>' + expense.description + '</td>' +
+                            '<td>' + company + '</td>' +
+                            '<td>' + description + '</td>' +
                             '<td>' + expense.amount + '</td>' +
                             '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
                             '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
