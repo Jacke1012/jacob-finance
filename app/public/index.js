@@ -123,6 +123,10 @@ $(document).ready(function () {
     }
 
     function editExpense(expenseId) {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // smooth scroll instead of instant jump
+        });
         $.ajax({
             url: '../php/edit_expense.php',
             type: 'GET',
