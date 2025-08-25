@@ -8,7 +8,7 @@ var urlsToCache = [
   '/index.js',
   '/sw.js',
   'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
-  'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
+  'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'
 ];
 
 // Install event - caches resources
@@ -24,8 +24,9 @@ self.addEventListener('install', function (event) {
 
 
 self.addEventListener('fetch', function (event) {
-  sendStoredRequests();
+  //sendStoredRequests();
   if (event.request.method === "POST") {
+    return
     // Only intercept POST requests
     if (!navigator.onLine) {
       // If offline, store the request
@@ -172,11 +173,11 @@ async function storeRequest(request) {
   }
 }
 
-self.addEventListener('change', function (event) {
-  if (navigator.onLine) {
-    sendStoredRequests();
-  }
-})
+// self.addEventListener('change', function (event) {
+//   if (navigator.onLine) {
+//     sendStoredRequests();
+//   }
+// })
 
 
 async function sendStoredRequests() {
