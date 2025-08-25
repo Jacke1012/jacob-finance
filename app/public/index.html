@@ -33,8 +33,9 @@
         }
 
         body {
-        background: var(--bg);
-        color: var(--fg);
+            background: var(--bg);
+            color: var(--fg);
+            display: flex;
         }
         h1, h2, h3, h4, h5, h6 { color: var(--fg); }
 
@@ -45,15 +46,23 @@
         }
 
         .container {
+            display: flex;
             flex: 1 1 auto;  
             flex-direction: column;
-            width: max-content;
+            width: fit-content;
             min-width: 0;  
             max-width: none;
             padding-top: 20px; 
+            padding-left: 20%;
+            padding-right: 20%;
         }
 
-        .container table { width: max-content; word-break: break-word; }
+        .div-primary{
+            display: flex;
+            flex-direction: column; 
+            flex:1 1 100%; 
+            min-width:0;
+        }
 
 
         .form-control, .custom-select {
@@ -81,7 +90,7 @@
 
     <div class="container">
         <h2>Finance</h2>
-        <div>
+        <div class="div-primary">
             <form id="expense-form">
                 <div class="form-group">
                     <label for="date_time">Date and Time:</label> <button id="refresh-date" type="button"
@@ -106,7 +115,7 @@
 
 
 
-        <div style="display: flex;flex-direction: column;">
+        <div class="div-primary">
             <h2>Expenses</h2>
             <div id="month-summary"></div>
             <div id="week-summary"></div>
@@ -132,7 +141,7 @@
         </div>
 
 
-        <div style="display: flex; flex-direction: column; flex:1 1 100%; min-width:0;">
+        <div class="div-primary">
             <table class="table" id="expenses-table">
                 <thead>
                     <tr>
