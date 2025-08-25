@@ -75,7 +75,33 @@ $(document).ready(function () {
         $('#amount').val("");
         $('#description').val("");
 
+        runOncePerHour();
     }
+
+
+    function runOncePerHour() {
+        const now = Date.now();
+        const lastRun = localStorage.getItem("lastRunTime");
+
+        // If no lastRun or more than 1 hour (3600000 ms) has passed
+        if (!lastRun || (now - lastRun) > 3600000) {
+            $.ajax({
+                url: '../php/db_fix.php', // Update this path
+                type: 'GET',
+                success: function (summary) {
+                    //console.log("Ran db_fix")
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fixdb error")
+                }
+            });
+
+            localStorage.setItem("lastRunTime", now);
+        } else {
+            //console.log("Too soon, not running again yet.");
+        }
+    }
+
 
 
     function deleteExpense(expenseId) {
@@ -142,11 +168,13 @@ $(document).ready(function () {
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
-                    //$('#expenses-table tbody').append('<tr><td>' + expense.date_time + '</td><td>' + expense.description + '</td><td>' + expense.amount + '</td><td><button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button></td></tr>');
+                    let description = expense.description ?? '';
+                    let company = expense.company ?? '';
                     $('#expenses-table tbody').append(
                         '<tr>' +
                             '<td>' + expense.date_time + '</td>' +
-                            '<td>' + expense.description + '</td>' +
+                            '<td>' + company + '</td>' +
+                            '<td>' + description + '</td>' +
                             '<td>' + expense.amount + '</td>' +
                             '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
                             '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
@@ -269,11 +297,13 @@ $(document).ready(function () {
         e.preventDefault(); // Prevent default form submission
         var dateTime = $('#date_time').val();
         var amount = $('#amount').val();
+        var company = $('#company').val();
         var description = $('#description').val();
 
         var dataToSend = {
         date_time: dateTime,
         amount: amount,
+        company: company,
         description: description
         };
 

@@ -3,6 +3,7 @@ include 'db_connect.php'; // Include your DB connection
 
 $date_time   = $_POST['date_time'] ?? null;
 $amount      = $_POST['amount'] ?? null;
+$company     = $_POST['company'] ?? null;
 $description = $_POST['description'] ?? null;
 $edit_id   = $_POST['edit_id'] ?? null;
 
@@ -14,14 +15,14 @@ if ($date_time && strpos($date_time, 'T') !== false) {
 
 
 if (empty($edit_id)){
-    $sql = 'INSERT INTO expenses (date_time, amount, description) VALUES ($1, $2, $3)';
+    $sql = 'INSERT INTO expenses (date_time, amount, description, company) VALUES ($1, $2, $3, $4)';
 
-    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description]);
+    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company]);
 }
 else{
-    $sql = 'UPDATE expenses SET date_time=$1, amount=$2, description=$3 WHERE id=$4';
+    $sql = 'UPDATE expenses SET date_time=$1, amount=$2, description=$3, company=$4 WHERE id=$5';
 
-    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $edit_id]);
+    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company, $edit_id]);
 }
 
 

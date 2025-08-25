@@ -71,9 +71,13 @@
                 <label for="amount">Amount:</label>
                 <input type="number" step="0.01" class="form-control" id="amount" required>
             </div>
+             <div class="form-group">
+                <label for="description">Company:</label>
+                <input type="text" class="form-control" id="company" autocomplete="off" required>
+            </div>
             <div class="form-group">
                 <label for="description">Description:</label>
-                <input type="text" class="form-control" id="description" autocomplete="off" required>
+                <input type="text" class="form-control" id="description" autocomplete="off">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -111,6 +115,7 @@
             <thead>
                 <tr>
                     <th>Date/Time</th>
+                    <th>Company</th>
                     <th>Description</th>
                     <th>Amount</th>
                 </tr>
