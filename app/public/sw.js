@@ -26,7 +26,10 @@ self.addEventListener('install', function (event) {
 self.addEventListener('fetch', function (event) {
   //sendStoredRequests();
   if (event.request.method === "POST") {
-    return
+    return new Response(JSON.stringify({ error: "Is Offline" }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+          });
     // Only intercept POST requests
     if (!navigator.onLine) {
       // If offline, store the request

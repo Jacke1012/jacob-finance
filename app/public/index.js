@@ -323,6 +323,12 @@ $(document).ready(function () {
             success: function (response) {
                 ReloadDisplay();
                 $('#expense-form').trigger('reset'); // Reset form fields
+            },
+            error: function(xhr, status, error){
+                console.error("Error:", status, error);
+                // Make submit button red
+                $("#expense-form button[type='submit']").removeClass("btn-primary");
+                $("#expense-form button[type='submit']").addClass("btn-error");
             }
         });
     });
