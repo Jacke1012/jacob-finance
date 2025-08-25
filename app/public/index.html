@@ -43,7 +43,18 @@
         border-color: var(--primary) !important;
         color: var(--primary-contrast) !important;
         }
-        .container { padding-top: 20px; }
+
+        .container {
+            flex: 1 1 auto;  
+            width: max-content;
+            min-width: 0;  
+            padding-top: 20px; 
+        }
+
+        .container table { width: 100%; table-layout: auto; word-break: break-word; }
+        .container .table-wrap { overflow-x: auto; } 
+
+
         .form-control, .custom-select {
         background-color: var(--input-bg);
         color: var(--fg);
@@ -61,33 +72,36 @@
         .table thead th { border-bottom-color: var(--border); }
         .table td, .table th { border-top-color: var(--border); }
         .table-striped tbody tr:nth-of-type(odd) { background-color: var(--table-stripe); }
+
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="container" style="display: flex;flex-direction: column; width: max-content;">
         <h2>Finance</h2>
-        <form id="expense-form">
-            <div class="form-group">
-                <label for="date_time">Date and Time:</label> <button id="refresh-date" type="button"
-                    class="btn btn-primary">Refresh</button>
-                <input type="datetime-local" class="form-control" id="date_time" required>
-            </div>
-            <div class="form-group">
-                <label for="amount">Amount:</label>
-                <input type="number" step="0.01" class="form-control" id="amount" required>
-            </div>
-             <div class="form-group">
-                <label for="description">Company:</label>
-                <input type="text" class="form-control" id="company" autocomplete="off">
-            </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <input type="text" class="form-control" id="description" autocomplete="off">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        <div style="display: flex;flex-direction: column;">
+            <form id="expense-form">
+                <div class="form-group">
+                    <label for="date_time">Date and Time:</label> <button id="refresh-date" type="button"
+                        class="btn btn-primary">Refresh</button>
+                    <input type="datetime-local" class="form-control" id="date_time" required>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" step="0.01" class="form-control" id="amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Company:</label>
+                    <input type="text" class="form-control" id="company" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" class="form-control" id="description" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
 
 
 
@@ -117,7 +131,7 @@
         </div>
 
 
-        <div style="display: flex; flex-direction: column; flex:1 1 100%; min-width:0;">
+        <div style="display: flex; flex-direction: column; flex:1 1 100%; min-width:0; font-size: small;">
             <table class="table" id="expenses-table">
                 <thead>
                     <tr>
@@ -125,6 +139,8 @@
                         <th>Company</th>
                         <th>Description</th>
                         <th>Amount</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
