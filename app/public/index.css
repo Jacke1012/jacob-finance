@@ -67,3 +67,104 @@ table.table { color: var(--fg); background: var(--card); border-color: var(--bor
 .table thead th { border-bottom-color: var(--border); }
 .table td, .table th { border-top-color: var(--border); }
 .table-striped tbody tr:nth-of-type(odd) { background-color: var(--table-stripe); }
+
+
+
+
+
+
+/* ===== Base (unchanged desktop) ===== */
+#expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Optional: nicer spacing */
+#expenses-table td, #expenses-table th {
+  padding: 8px 10px;
+}
+
+
+
+/* ===== Mobile layout ===== */
+@media (max-width: 640px) {
+  /* Hide the header and turn each row into a “card” */
+  #expenses-table thead { display: none; }
+
+  #expenses-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border: 1px solid var(--border, #2a2a2a);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    background: var(--card, rgba(255,255,255,0.02));
+  }
+
+  #expenses-table tbody td {
+    display: block;           /* stack all cells vertically */
+    padding: 2px 0;
+  }
+
+  /* === Title / DateTime cell === */
+  #expenses-table tbody td:nth-child(1) {
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--border, #333);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+
+
+  /* Company & description */
+  #expenses-table tbody td:nth-child(2),
+  #expenses-table tbody td:nth-child(3) {
+    font-size: 0.9rem;
+  }
+
+  /* Amount aligned to right and bolder */
+  #expenses-table tbody td:nth-child(4) {
+    font-weight: 700;
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* Buttons stacked */
+  #expenses-table tbody td:nth-child(5),
+  #expenses-table tbody td:nth-child(6) {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  #expenses-table tbody td.actions,
+  #expenses-table tbody td:nth-last-child(-n+1) { /* last cells as a fallback */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: flex-start;
+  }
+
+  /* If your Edit/Delete are in the same cell, this still works: */
+  #expenses-table .btn-group {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  /* Pagination / “Previous / Next” controls wrap neatly on mobile */
+  .pager, .period-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  #month-select .btn-primary{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+}

@@ -179,12 +179,16 @@ $(document).ready(function () {
                     let company = expense.company ?? '';
                     $('#expenses-table tbody').append(
                         '<tr>' +
-                            '<td>' + expense.date_time + '</td>' +
                             '<td>' + company + '</td>' +
                             '<td>' + description + '</td>' +
+                            '<td>' + expense.date_time + '</td>' +
                             '<td>' + expense.amount + '</td>' +
-                            '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
-                            '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
+                            '<td class="actions">' +
+                            '<div class="btn-group">' +
+                            '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
+                            '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
+                            '</div>' +
+                            '</td>' +
                         '</tr>'
                     );                
                 });
@@ -212,12 +216,16 @@ $(document).ready(function () {
                     let company = expense.company ?? '';
                     $('#expenses-table tbody').append(
                         '<tr>' +
-                            '<td>' + expense.date_time + '</td>' +
                             '<td>' + company + '</td>' +
                             '<td>' + description + '</td>' +
+                            '<td>' + expense.date_time + '</td>' +
                             '<td>' + expense.amount + '</td>' +
-                            '<td>' + '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + '</td>'+ 
-                            '<td>' + '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' + '</td>' +
+                            '<td class="actions">' +
+                            '<div class="btn-group">' +
+                            '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
+                            '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
+                            '</div>' +
+                            '</td>' +
                         '</tr>'
                     );                
                 });
