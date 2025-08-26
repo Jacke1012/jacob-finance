@@ -167,4 +167,10 @@ table.table { color: var(--fg); background: var(--card); border-color: var(--bor
     gap: 8px;
     width: 100%;
   }
+  #month-select .dir-btn{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+  }
 }
