@@ -1,0 +1,69 @@
+.btn-error {
+    background-color: red !important;
+    border-color: red !important;
+    color: white !important;
+}
+
+/* Theme variables */
+:root {
+    --bg: #0b0b10;
+    --fg: #e9e9f1;
+    --muted: #b3b3be;
+    --card: #14141b;
+    --border: #2a2a35;
+    --primary: #7ab3ff;
+    --primary-contrast: #0b0b10;
+    --table-stripe: #171722;
+    --input-bg: #111118;
+}
+
+body {
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+}
+h1, h2, h3, h4, h5, h6 { color: var(--fg); }
+
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-contrast) !important;
+}
+
+.container {
+    display: flex;
+    flex: 1 1 auto;  
+    flex-direction: column;
+    width: fit-content;
+    min-width: 0;  
+    max-width: none;
+    padding-top: 20px; 
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.div-primary{
+    display: flex;
+    flex-direction: column; 
+    flex:1 1 100%; 
+    min-width:0;
+}
+
+
+.form-control, .custom-select {
+    background-color: var(--input-bg);
+    color: var(--fg);
+    border-color: var(--border);
+}
+.form-control:focus, .custom-select:focus {
+    background-color: var(--input-bg);
+    color: var(--fg);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(122,179,255,0.25);
+}
+label { color: var(--fg); }
+
+table.table { color: var(--fg); background: var(--card); border-color: var(--border); }
+.table thead th { border-bottom-color: var(--border); }
+.table td, .table th { border-top-color: var(--border); }
+.table-striped tbody tr:nth-of-type(odd) { background-color: var(--table-stripe); }
