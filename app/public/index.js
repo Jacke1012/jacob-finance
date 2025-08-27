@@ -185,8 +185,8 @@ $(document).ready(function () {
                             '<td>' + expense.amount + '</td>' +
                             '<td class="actions">' +
                             '<div class="btn-group">' +
-                            '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
-                            '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
+                            '<button class="btn btn-primary edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
+                            '<button class="btn btn-primary delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
                             '</div>' +
                             '</td>' +
                         '</tr>'
@@ -222,8 +222,8 @@ $(document).ready(function () {
                             '<td>' + expense.amount + '</td>' +
                             '<td class="actions">' +
                             '<div class="btn-group">' +
-                            '<button class="edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
-                            '<button class="delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
+                            '<button class="btn btn-primary edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
+                            '<button class="btn btn-primary delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
                             '</div>' +
                             '</td>' +
                         '</tr>'
