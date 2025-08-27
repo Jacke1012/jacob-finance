@@ -105,19 +105,21 @@ table.table { color: var(--fg); background: var(--card); border-color: var(--bor
   #expenses-table tbody td {
     display: block;           /* stack all cells vertically */
     padding: 2px 0;
+    border: 0;
   }
 
-  /* === Title / DateTime cell === */
+
+  /* === Company === */
   #expenses-table tbody td:nth-child(1) {
-    font-weight: 700;
-    font-size: 0.95rem;
-    border-bottom: 1px solid var(--border, #333);
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #b3b3b3;
     padding-bottom: 4px;
     margin-bottom: 4px;
   }
 
 
-  /* Company & description */
+  /* Description and time */
   #expenses-table tbody td:nth-child(2),
   #expenses-table tbody td:nth-child(3) {
     font-size: 0.9rem;
