@@ -72,8 +72,8 @@ $(document).ready(function () {
             loadExpensesMonth(currentDate.getFullYear(), currentDate.getMonth() + 1)
         }
 
-        $('#amount').val("");
-        $('#description').val("");
+        $('#amount-txt').val("");
+        $('#description-txt').val("");
 
         runOncePerHour();
     }
@@ -137,9 +137,9 @@ $(document).ready(function () {
                 let company = response.company ?? '';
                 sessionStorage.setItem("edit_id", expenseId);
                 $('#date_time').val(response.date_time);
-                $('#amount').val(response.amount);
-                $('#company').val(company)
-                $('#description').val(description);
+                $('#amount-txt').val(response.amount);
+                $('#company-txt').val(company)
+                $('#description-txt').val(description);
             },
             error: function (xhr, status, error) {
                 console.error("Error deleting expense: ", error);
@@ -313,9 +313,9 @@ $(document).ready(function () {
     $('#expense-form').submit(function (e) {
         e.preventDefault(); // Prevent default form submission
         var dateTime = $('#date_time').val();
-        var amount = $('#amount').val();
-        var company = $('#company').val();
-        var description = $('#description').val();
+        var amount = $('#amount-txt').val();
+        var company = $('#company-txt').val();
+        var description = $('#description-txt').val();
 
         var dataToSend = {
         date_time: dateTime,
