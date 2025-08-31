@@ -1,16 +1,12 @@
 <?php
 include 'db_connect.php'; // should define $conn and $mysql
 
-$date_one = $_GET['date_one'] ?? null;
-$date_two = $_GET['date_two'] ?? null;
+#$date_one = $_GET['date_one'] ?? null;
+#$date_two = $_GET['date_two'] ?? null;
+$week_number = $_GET['week_number'] ?? null;
 
 header('Content-Type: application/json');
 
-// Basic validation (optional)
-if (!$date_one || !$date_two) {
-    echo json_encode(["error" => "Missing date parameters"]);
-    exit;
-}
 
 // PostgreSQL branch
 // normalize possible "YYYY-MM-DDTHH:MM:SS"
@@ -21,11 +17,11 @@ if (!$date_one || !$date_two) {
 $sql = "
     SELECT *
     FROM expenses
-    WHERE date_time BETWEEN $1::timestamp AND $2::timestamp
+    WHERE EXTRACT(WEEK FROM date_time) = $1
     ORDER BY date_time DESC
 ";
 
-$result = pg_query_params($conn, $sql, [$date_one, $date_two]);
+$result = pg_query_params($conn, $sql, [$week_number]);
 if (!$result) {
     echo json_encode(["error" => pg_last_error($conn)]);
     pg_close($conn);

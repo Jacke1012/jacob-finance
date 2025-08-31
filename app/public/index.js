@@ -45,12 +45,12 @@ $(document).ready(function () {
         });
     }
 
-    function loadWeekSummary(dateInterval) {
+    function loadWeekSummary(week_number) {
         //dateInterval = getWeekDates(date);
         $.ajax({
             url: "../php/get_week_summary.php",
             type: "GET",
-            data: { date_one: dateInterval[0].toLocaleString("sv-SE"), date_two: dateInterval[1].toLocaleString("sv-SE") },
+            data: { week_number: week_number },
             dataType: "json",
             success: function (summary) {
                 $("#week-summary").text("Week Summary: " + summary.week_summary)
@@ -61,12 +61,13 @@ $(document).ready(function () {
 
     function ReloadDisplay() {
         sessionStorage.removeItem("edit_id");
+        let current_week = getWeek(currentDate)
         updateMonthYearDisplay(currentDate);
-        updateWeekDisplay(currentDate);
-        dateInterval = getWeekDates(currentDate);
+        updateWeekDisplay(current_week);
+        //dateInterval = getWeekDates(currentDate);
         //console.log(dateInterval)
         if (currentDisplayFormat == Display_Formats.week) {
-            loadExpensesWeek(dateInterval);
+            loadExpensesWeek(current_week);
         }
         else if (currentDisplayFormat == Display_Formats.month) {
             loadExpensesMonth(currentDate.getFullYear(), currentDate.getMonth() + 1)
@@ -163,15 +164,15 @@ $(document).ready(function () {
     }
 
     // Function to load expenses
-    function loadExpensesWeek(dateInterval) {
+    function loadExpensesWeek(week_number) {
         $.ajax({
             url: '../php/get_expenses_week.php', 
             type: 'GET',
-            data: { date_one: dateInterval[0].toLocaleString("sv-SE"), date_two: dateInterval[1].toLocaleString("sv-SE") },
+            data: { week_number: week_number },
             dataType: 'json',
             success: function (expenses) {
                 loadMonthSummary(currentDate.getFullYear(), currentDate.getMonth() + 1);
-                loadWeekSummary(dateInterval)
+                loadWeekSummary(week_number)
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
@@ -287,8 +288,8 @@ $(document).ready(function () {
     });
 
 
-    function updateWeekDisplay(date) {
-        $('#current-week').text("Week " + getWeek(date));
+    function updateWeekDisplay(week) {
+        $('#current-week').text("Week " + week);
     }
     $("#refresh-date").click(function () {
         ReloadDisplay();
