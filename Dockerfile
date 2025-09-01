@@ -4,8 +4,13 @@ FROM alpine:latest
 # Tiny runtime
 RUN apk add --no-cache \
     nginx php83 php83-fpm php83-opcache supervisor \
-    php83-pgsql
-#php83-mysqli
+    php83-pgsql \
+    php83-pdo php83-pdo_pgsql \
+    php83-ctype php83-fileinfo php83-mbstring php83-openssl php83-tokenizer \
+    php83-dom php83-session php83-xml php83-zip php83-xmlwriter \
+    composer
+
+
 
 ARG APP_UID=10001
 ARG APP_GID=10001
@@ -26,9 +31,12 @@ COPY config/php-fpm.d/www.conf          /etc/php83/php-fpm.d/www.conf
 COPY config/php-fpm.d/zz-env.conf       /etc/php83/php-fpm.d/zz-env.conf
 COPY config/99-opcache.ini              /etc/php83/conf.d/99-opcache.ini
 
-# App
-#COPY app /var/www
-COPY --chown=web:web app /var/www
+# Copy App
+COPY --chown=web:web app /var/www/app
+
+WORKDIR /var/www/app
+RUN composer install --no-dev --optimize-autoloader
+
 
 USER web
 
