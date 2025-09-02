@@ -38,7 +38,7 @@ $(document).ready(function () {
             data: { year: year, month: month },
             dataType: 'json',
             success: function (summary) {
-                $('#month-summary').text('Month Summary: ' + summary.total_spent);
+                $('#month-summary').text('Month Summary: ' + summary.month_summary);
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching monthly summary: ", error);

@@ -15,7 +15,7 @@ if (!is_numeric($year) || !is_numeric($month)) {
 }
 
 $sql = "
-    SELECT COALESCE(SUM(amount), 0) AS total_spent
+    SELECT COALESCE(SUM(amount), 0) AS month_summary
     FROM expenses
     WHERE EXTRACT(YEAR FROM date_time) = $1
         AND EXTRACT(MONTH FROM date_time) = $2
