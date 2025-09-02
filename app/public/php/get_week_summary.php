@@ -7,6 +7,7 @@ include 'db_connect.php'; // defines $conn and $mysql
 #$date_one = $_GET['date_one'] ?? null;
 #$date_two = $_GET['date_two'] ?? null;
 $week_number = $_GET['week_number'] ?? null;
+$year_input = $_GET['year_input'] ?? null;
 
 header('Content-Type: application/json');
 
@@ -14,10 +15,11 @@ header('Content-Type: application/json');
 $sql = "
     SELECT COALESCE(SUM(amount),0) AS week_summary
     FROM expenses
-    WHERE EXTRACT(WEEK FROM date_time) = $1
+    WHERE EXTRACT(YEAR FROM date_time) = $1
+    AND EXTRACT(WEEK FROM date_time) = $2
 ";
 
-$result = pg_query_params($conn, $sql, [$week_number]);
+$result = pg_query_params($conn, $sql, [$year_input,$week_number]);
 if ($result) {
     $row = pg_fetch_assoc($result);
     echo json_encode($row);

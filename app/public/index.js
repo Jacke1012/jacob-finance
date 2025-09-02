@@ -3,7 +3,7 @@ $(document).ready(function () {
     function getWeek(date) {
         date.setHours(0, 0, 0, 0);
         date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
-        var week1 = new Date(date.getFullYear(), 0, 4);
+        let week1 = new Date(date.getFullYear(), 0, 4);
         return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
             - 3 + (week1.getDay() + 6) % 7) / 7);
     }
@@ -18,7 +18,8 @@ $(document).ready(function () {
         return dateInterval;
     }
 
-    let currentDate = new Date();
+    var currentDate = new Date();
+    var currentWeek = 0;
     const Display_Formats = {
         week: 0,
         month: 1
@@ -45,12 +46,12 @@ $(document).ready(function () {
         });
     }
 
-    function loadWeekSummary(week_number) {
+    function loadWeekSummary() {
         //dateInterval = getWeekDates(date);
         $.ajax({
             url: "../php/get_week_summary.php",
             type: "GET",
-            data: { week_number: week_number },
+            data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
             dataType: "json",
             success: function (summary) {
                 $("#week-summary").text("Week Summary: " + summary.week_summary)
@@ -61,13 +62,11 @@ $(document).ready(function () {
 
     function ReloadDisplay() {
         sessionStorage.removeItem("edit_id");
-        let current_week = getWeek(currentDate)
+        currentWeek = getWeek(currentDate)
         updateMonthYearDisplay(currentDate);
-        updateWeekDisplay(current_week);
-        //dateInterval = getWeekDates(currentDate);
-        //console.log(dateInterval)
+        updateWeekDisplay();
         if (currentDisplayFormat == Display_Formats.week) {
-            loadExpensesWeek(current_week);
+            loadExpensesWeek();
         }
         else if (currentDisplayFormat == Display_Formats.month) {
             loadExpensesMonth(currentDate.getFullYear(), currentDate.getMonth() + 1)
@@ -164,15 +163,15 @@ $(document).ready(function () {
     }
 
     // Function to load expenses
-    function loadExpensesWeek(week_number) {
+    function loadExpensesWeek() {
         $.ajax({
             url: '../php/get_expenses_week.php', 
             type: 'GET',
-            data: { week_number: week_number },
+            data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
             dataType: 'json',
             success: function (expenses) {
                 loadMonthSummary(currentDate.getFullYear(), currentDate.getMonth() + 1);
-                loadWeekSummary(week_number)
+                loadWeekSummary(getWeek(currentDate))
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
@@ -203,13 +202,11 @@ $(document).ready(function () {
         $.ajax({
             url: '../php/get_expenses_month.php', // You need to replace this with the path to your PHP script
             type: 'GET',
-            data: { year: year, month: month }, // Pass year and month as parameters
-            //data: { year: year, month: month, date_one: dateInterval[0].toLocaleString("sv-SE"), date_two: dateInterval[1].toLocaleString("sv-SE") }, // Pass year and month as parameters
-            //data: { date_one: dateInterval[0].toLocaleString("sv-SE"), date_two: dateInterval[1].toLocaleString("sv-SE") },
+            data: { year: year, month: month },
             dataType: 'json',
             success: function (expenses) {
                 loadMonthSummary(year, month);
-                loadWeekSummary(dateInterval)
+                loadWeekSummary()
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
@@ -288,8 +285,8 @@ $(document).ready(function () {
     });
 
 
-    function updateWeekDisplay(week) {
-        $('#current-week').text("Week " + week);
+    function updateWeekDisplay() {
+        $('#current-week').text("Week " + currentWeek);
     }
     $("#refresh-date").click(function () {
         ReloadDisplay();
