@@ -6,7 +6,7 @@ include 'db_connect.php'; // should define $conn and $mysql
 $week_number = $_GET['week_number'] ?? null;
 $year_input = $_GET['year_input'] ?? null;
 
-$userEmail = $_SERVER['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
+$userEmail = $headers['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
 
 
 header('Content-Type: application/json');

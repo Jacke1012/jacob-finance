@@ -6,6 +6,9 @@ echo "DB_NAME=" . getenv('DB_NAME') . "\n";
 //echo "DB_PASS=" . getenv('DB_PASS') . "\n";
 echo "</pre>";
 
+$userEmail = $headers['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
+
+echo $userEmail . "<br><br><br><br>";
 
 $headers = getallheaders();
 

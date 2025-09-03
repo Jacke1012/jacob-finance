@@ -7,7 +7,7 @@ header('Cache-Control: public, max-age=10');
 $year  = $_GET['year']  ?? null;
 $month = $_GET['month'] ?? null;
 
-$userEmail = $_SERVER['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
+$userEmail = $headers['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
 
 
 header('Content-Type: application/json');

@@ -6,7 +6,7 @@ $amount      = $_POST['amount'] ?? null;
 $company     = $_POST['company'] ?? null;
 $description = $_POST['description'] ?? null;
 $edit_id   = $_POST['edit_id'] ?? null;
-$userEmail = $_SERVER['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
+$userEmail = $headers['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
 
 
 // Convert "YYYY-MM-DDTHH:MM" to "YYYY-MM-DD HH:MM"
