@@ -3,24 +3,20 @@ include 'db_connect.php'; // defines $conn and $mysql
 
 header('Content-Type: application/json');
 
-if (isset($expenseId)) {
-    $expenseId = $expenseId;
-}
-elseif (isset($_POST['id'])) {
-    $expenseId = $_POST['id'];
-}
-else{
-    echo json_encode(["statusCode" => 400, "message" => "Missing expenseId"]);
-    exit;
-}
+
+$expenseId = $_POST['id'] ?? null;
+
+$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
+
+
 
 $sql = "
     DELETE
     FROM expenses
-    WHERE id=$1
+    WHERE user_email=$1 AND id=$2
 ";
 
-$result = pg_query_params($conn, $sql, [$expenseId]);
+$result = pg_query_params($conn, $sql, [$userEmail, $expenseId]);
 
 if ($result) {
     echo json_encode([

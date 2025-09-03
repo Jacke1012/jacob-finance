@@ -6,24 +6,22 @@ include 'db_connect.php'; // should define $conn and $mysql
 $week_number = $_GET['week_number'] ?? null;
 $year_input = $_GET['year_input'] ?? null;
 
+$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
+
+
 header('Content-Type: application/json');
 
 
-// PostgreSQL branch
-// normalize possible "YYYY-MM-DDTHH:MM:SS"
-//if (strpos($date_one, 'T') !== false) $date_one = str_replace('T', ' ', $date_one);
-//if (strpos($date_two, 'T') !== false) $date_two = str_replace('T', ' ', $date_two);
-
-// explicit casts avoid “text → timestamp” ambiguity
 $sql = "
     SELECT *
     FROM expenses
-    WHERE EXTRACT(YEAR FROM date_time) = $1
+    WHERE user_email=$3
+    AND EXTRACT(YEAR FROM date_time) = $1
     AND EXTRACT(WEEK FROM date_time) = $2
     ORDER BY date_time DESC
 ";
 
-$result = pg_query_params($conn, $sql, [$year_input,$week_number]);
+$result = pg_query_params($conn, $sql, [$year_input,$week_number,$userEmail]);
 if (!$result) {
     echo json_encode(["error" => pg_last_error($conn)]);
     pg_close($conn);
