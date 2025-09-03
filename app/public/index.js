@@ -52,6 +52,30 @@ $(document).ready(function () {
         });
     }
 
+    function runOncePerHour() {
+        sessionStorage.removeItem("edit_id");
+        const now = Date.now();
+        const lastRun = localStorage.getItem("lastRunTime");
+
+        // If no lastRun or more than 1 hour (3600000 ms) has passed
+        if (!lastRun || (now - lastRun) > 3600000) {
+            $.ajax({
+                url: '../php/db_fix.php', // Update this path
+                type: 'GET',
+                success: function (summary) {
+                    //console.log("Ran db_fix")
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fixdb error")
+                }
+            });
+
+            localStorage.setItem("lastRunTime", now);
+        } else {
+            //console.log("Too soon, not running again yet.");
+        }
+    }
+
 
     //Display functions:
 
@@ -111,31 +135,6 @@ $(document).ready(function () {
     }
 
 
-
-
-
-    function runOncePerHour() {
-        const now = Date.now();
-        const lastRun = localStorage.getItem("lastRunTime");
-
-        // If no lastRun or more than 1 hour (3600000 ms) has passed
-        if (!lastRun || (now - lastRun) > 3600000) {
-            $.ajax({
-                url: '../php/db_fix.php', // Update this path
-                type: 'GET',
-                success: function (summary) {
-                    //console.log("Ran db_fix")
-                },
-                error: function (xhr, status, error) {
-                    console.error("Fixdb error")
-                }
-            });
-
-            localStorage.setItem("lastRunTime", now);
-        } else {
-            //console.log("Too soon, not running again yet.");
-        }
-    }
 
 
 
