@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 
 $expenseId = $_POST['id'] ?? null;
 
-$userEmail = $_SERVER['Cf-HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
+$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
 
 
 
