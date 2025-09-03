@@ -1,5 +1,25 @@
 $(document).ready(function () {
 
+
+
+    //Global varibles
+
+    var edit_id = -1;
+    var currentDate = new Date();
+    var currentWeek = 0;
+    const Display_Formats = {
+        week: 0,
+        month: 1
+    }
+    let currentDisplayFormat = Display_Formats.week;
+    updateMonthYearDisplay(currentDate);
+
+    ReloadDisplay()
+
+
+
+
+    //Support Functions
     function getWeek(date) {
         date.setHours(0, 0, 0, 0);
         date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
@@ -18,17 +38,48 @@ $(document).ready(function () {
         return dateInterval;
     }
 
-    var currentDate = new Date();
-    var currentWeek = 0;
-    const Display_Formats = {
-        week: 0,
-        month: 1
+    function setCurrentTime() {
+        $.ajax({
+            url: '../php/currentTime.php', // Adjust the path to where you host your PHP script
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                $('#date_time').val(response.currentTime);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching server time: ", error);
+            }
+        });
     }
-    let currentDisplayFormat = Display_Formats.week;
-    updateMonthYearDisplay(currentDate);
 
-    //loadExpenses(currentDate.getFullYear(), currentDate.getMonth() + 1);
-    ReloadDisplay()
+
+    //Display functions:
+
+    function updateMonthYearDisplay(date) {
+        $('#current-month-year').text(date.toLocaleDateString('default', { month: 'long', year: 'numeric' }));
+    }
+
+    function updateWeekDisplay() {
+        $('#current-week').text("Week " + currentWeek);
+    }
+
+    function ReloadDisplay() {
+        edit_id = -1;
+        currentWeek = getWeek(currentDate)
+        updateMonthYearDisplay(currentDate);
+        updateWeekDisplay();
+        if (currentDisplayFormat == Display_Formats.week) {
+            loadExpensesWeek();
+        }
+        else if (currentDisplayFormat == Display_Formats.month) {
+            loadExpensesMonth(currentDate.getFullYear(), currentDate.getMonth() + 1)
+        }
+
+        $('#amount-txt').val("");
+        $('#description-txt').val("");
+
+        runOncePerHour();
+    }
 
 
     function loadMonthSummary(year, month) {
@@ -60,23 +111,7 @@ $(document).ready(function () {
     }
 
 
-    function ReloadDisplay() {
-        sessionStorage.removeItem("edit_id");
-        currentWeek = getWeek(currentDate)
-        updateMonthYearDisplay(currentDate);
-        updateWeekDisplay();
-        if (currentDisplayFormat == Display_Formats.week) {
-            loadExpensesWeek();
-        }
-        else if (currentDisplayFormat == Display_Formats.month) {
-            loadExpensesMonth(currentDate.getFullYear(), currentDate.getMonth() + 1)
-        }
 
-        $('#amount-txt').val("");
-        $('#description-txt').val("");
-
-        runOncePerHour();
-    }
 
 
     function runOncePerHour() {
@@ -103,6 +138,8 @@ $(document).ready(function () {
     }
 
 
+
+    //Click Actions
 
     function deleteExpense(expenseId) {
         if (confirm("Are you sure you want to delete this expense?")) {
@@ -135,7 +172,6 @@ $(document).ready(function () {
             success: function (response) {
                 let description = response.description ?? '';
                 let company = response.company ?? '';
-                sessionStorage.setItem("edit_id", expenseId);
                 $('#date_time').val(response.date_time);
                 $('#amount-txt').val(response.amount);
                 $('#company-txt').val(company)
@@ -147,20 +183,6 @@ $(document).ready(function () {
         });
     }
 
-
-    function setCurrentTime() {
-        $.ajax({
-            url: '../php/currentTime.php', // Adjust the path to where you host your PHP script
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                $('#date_time').val(response.currentTime);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching server time: ", error);
-            }
-        });
-    }
 
     // Function to load expenses
     function loadExpensesWeek() {
@@ -232,10 +254,45 @@ $(document).ready(function () {
 
     }
 
+    $('#expense-form').submit(function (e) {
+        e.preventDefault(); // Prevent default form submission
+        let dateTime = $('#date_time').val();
+        let amount = $('#amount-txt').val();
+        let company = $('#company-txt').val();
+        let description = $('#description-txt').val();
+
+        let dataToSend = {
+        date_time: dateTime,
+        amount: amount,
+        company: company,
+        description: description
+        };
+
+        if (edit_id !== -1) {
+            dataToSend.edit_id = edit_id;
+        }
+
+        $.ajax({
+            url: '../php/add_expense.php', // Replace with the path to your PHP script for adding an expense
+            type: 'POST',
+            data: dataToSend,
+            success: function (response) {
+                ReloadDisplay();
+                $('#expense-form').trigger('reset'); // Reset form fields
+            },
+            error: function(xhr, status, error){
+                console.error("Error:", status, error);
+                // Make submit button red
+                $("#expense-form button[type='submit']").removeClass("btn-primary");
+                $("#expense-form button[type='submit']").addClass("btn-error");
+            }
+        });
+    });
 
 
 
-    /////////////////////////////SEPERATION////////////////////////
+
+    //Buttons
 
 
     $('#prev-month').click(function () {
@@ -265,10 +322,6 @@ $(document).ready(function () {
         }
     })
 
-    function updateMonthYearDisplay(date) {
-        $('#current-month-year').text(date.toLocaleDateString('default', { month: 'long', year: 'numeric' }));
-    }
-
 
     $('#prev-week').click(function () {
         currentDate.setDate(currentDate.getDate() - 7);
@@ -284,63 +337,24 @@ $(document).ready(function () {
         ReloadDisplay();
     });
 
-
-    function updateWeekDisplay() {
-        $('#current-week').text("Week " + currentWeek);
-    }
+    
     $("#refresh-date").click(function () {
         ReloadDisplay();
     })
 
-    //console.log(currentDate.toLocaleDateString());
-    //console.log(getWeek(currentDate))
-
 
     // Event delegation for delete button
     $('#expenses-table').on('click', '.delete-expense-btn', function () {
-        var expenseId = $(this).data('id'); // Using data-id attribute to store the expense ID
+        let expenseId = $(this).data('id'); // Using data-id attribute to store the expense ID
         deleteExpense(expenseId);
     });
 
     $('#expenses-table').on('click', '.edit-expense-btn', function () {
-        var expenseId = $(this).data('id'); // Using data-id attribute to store the expense ID
+        let expenseId = $(this).data('id'); // Using data-id attribute to store the expense ID
+        edit_id = expenseId;
         editExpense(expenseId);
     });
 
-    // Handle form submission
-    $('#expense-form').submit(function (e) {
-        e.preventDefault(); // Prevent default form submission
-        var dateTime = $('#date_time').val();
-        var amount = $('#amount-txt').val();
-        var company = $('#company-txt').val();
-        var description = $('#description-txt').val();
-
-        var dataToSend = {
-        date_time: dateTime,
-        amount: amount,
-        company: company,
-        description: description
-        };
-
-        if (sessionStorage.getItem("edit_id")) {
-            dataToSend.edit_id = sessionStorage.getItem("edit_id");
-        }
-
-        $.ajax({
-            url: '../php/add_expense.php', // Replace with the path to your PHP script for adding an expense
-            type: 'POST',
-            data: dataToSend,
-            success: function (response) {
-                ReloadDisplay();
-                $('#expense-form').trigger('reset'); // Reset form fields
-            },
-            error: function(xhr, status, error){
-                console.error("Error:", status, error);
-                // Make submit button red
-                $("#expense-form button[type='submit']").removeClass("btn-primary");
-                $("#expense-form button[type='submit']").addClass("btn-error");
-            }
-        });
-    });
+    
 });
 
