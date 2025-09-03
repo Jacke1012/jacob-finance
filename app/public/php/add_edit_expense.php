@@ -6,6 +6,7 @@ $amount      = $_POST['amount'] ?? null;
 $company     = $_POST['company'] ?? null;
 $description = $_POST['description'] ?? null;
 $edit_id   = $_POST['edit_id'] ?? null;
+$userEmail = $_SERVER['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
 
 
 // Convert "YYYY-MM-DDTHH:MM" to "YYYY-MM-DD HH:MM"
@@ -15,14 +16,14 @@ if ($date_time && strpos($date_time, 'T') !== false) {
 
 
 if (empty($edit_id)){
-    $sql = 'INSERT INTO expenses (date_time, amount, description, company) VALUES ($1, $2, $3, $4)';
+    $sql = 'INSERT INTO expenses (date_time, amount, description, company, user_email) VALUES ($1, $2, $3, $4, $5)';
 
-    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company]);
+    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company, $userEmail]);
 }
 else{
-    $sql = 'UPDATE expenses SET date_time=$1, amount=$2, description=$3, company=$4 WHERE id=$5';
+    $sql = 'UPDATE expenses SET date_time=$1, amount=$2, description=$3, company=$4 WHERE id=$5 AND user_email=$6';
 
-    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company, $edit_id]);
+    $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company, $edit_id, $userEmail]);
 }
 
 

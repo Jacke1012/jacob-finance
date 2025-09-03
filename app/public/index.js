@@ -164,7 +164,7 @@ $(document).ready(function () {
             behavior: 'smooth' // smooth scroll instead of instant jump
         });
         $.ajax({
-            url: '../php/edit_expense.php',
+            url: '../php/load_for_edit_expense.php',
             type: 'GET',
             dataType: 'json',
             data: { id: expenseId },
@@ -272,7 +272,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '../php/add_expense.php', // Replace with the path to your PHP script for adding an expense
+            url: '../php/add_edit_expense.php', // Replace with the path to your PHP script for adding an expense
             type: 'POST',
             data: dataToSend,
             success: function (response) {

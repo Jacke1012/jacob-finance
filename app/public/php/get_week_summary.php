@@ -9,17 +9,21 @@ include 'db_connect.php'; // defines $conn and $mysql
 $week_number = $_GET['week_number'] ?? null;
 $year_input = $_GET['year_input'] ?? null;
 
+$userEmail = $_SERVER['Cf-Access-Authenticated-User-Email'] ?? 'invalid';
+
+
 header('Content-Type: application/json');
 
 
 $sql = "
     SELECT COALESCE(SUM(amount),0) AS week_summary
     FROM expenses
-    WHERE EXTRACT(YEAR FROM date_time) = $1
-    AND EXTRACT(WEEK FROM date_time) = $2
+    WHERE user_email=$1
+    AND EXTRACT(YEAR FROM date_time) = $2
+    AND EXTRACT(WEEK FROM date_time) = $3
 ";
 
-$result = pg_query_params($conn, $sql, [$year_input,$week_number]);
+$result = pg_query_params($conn, $sql, [$userEmail, $year_input,$week_number]);
 if ($result) {
     $row = pg_fetch_assoc($result);
     echo json_encode($row);
