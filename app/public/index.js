@@ -76,6 +76,14 @@ $(document).ready(function () {
         }
     }
 
+    function sumExpenses(expense_list){
+        let sum = 0
+            expense_list.forEach(expense => {
+                sum += +expense.amount
+            });
+        return sum;
+    }
+
 
     //Display functions:
 
@@ -113,7 +121,22 @@ $(document).ready(function () {
             data: { year: year, month: month },
             dataType: 'json',
             success: function (summary) {
-                $('#month-summary').text('Month Summary: ' + summary.month_summary);
+                $("#month-summary").text("Month Summary: " + summary.month_summary);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching monthly summary: ", error);
+            }
+        });
+    }
+
+    function loadMonthSummaryList(year, month) {
+        $.ajax({
+            url: '../php/get_month_summary_list.php', // Update this path
+            type: 'GET',
+            data: { year: year, month: month },
+            dataType: 'json',
+            success: function (expenses_list) {
+                $("#month-summary").text("Month Summary: " + sumExpenses(expenses_list));
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching monthly summary: ", error);
@@ -132,6 +155,21 @@ $(document).ready(function () {
                 $("#week-summary").text("Week Summary: " + summary.week_summary)
             }
         })
+    }
+
+    function loadWeekSummaryList() {
+        $.ajax({
+            url: '../php/get_week_summary_list.php', // Update this path
+            type: 'GET',
+            data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
+            dataType: 'json',
+            success: function (expenses_list) {
+                $("#week-summary").text("Week Summary: " + sumExpenses(expenses_list));
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching monthly summary: ", error);
+            }
+        });
     }
 
 
@@ -191,8 +229,8 @@ $(document).ready(function () {
             data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
             dataType: 'json',
             success: function (expenses) {
-                loadMonthSummary(currentDate.getFullYear(), currentDate.getMonth() + 1);
-                loadWeekSummary(getWeek(currentDate))
+                loadMonthSummaryList(currentDate.getFullYear(), currentDate.getMonth() + 1);
+                loadWeekSummaryList()
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
@@ -226,8 +264,8 @@ $(document).ready(function () {
             data: { year: year, month: month },
             dataType: 'json',
             success: function (expenses) {
-                loadMonthSummary(year, month);
-                loadWeekSummary()
+                loadMonthSummaryList(currentDate.getFullYear(), currentDate.getMonth() + 1);
+                loadWeekSummaryList()
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
