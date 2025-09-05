@@ -3,6 +3,9 @@ include 'db_connect.php'; // Ensure this points to your actual database connecti
 
 $expenseId = $_GET['id'] ?? null;
 
+header('Cache-Control: private, max-age=0');
+
+
 
 $sql = "
     SELECT *

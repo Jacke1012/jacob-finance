@@ -8,6 +8,7 @@ $userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
 
 
 header('Content-Type: application/json');
+header('Cache-Control: private, max-age=0');
 
 // Basic validation
 if (!is_numeric($year) || !is_numeric($month)) {

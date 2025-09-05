@@ -8,6 +8,7 @@ $year_input = $_GET['year_input'] ?? null;
 
 $userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
 
+header('Cache-Control: private, max-age=0');
 
 header('Content-Type: application/json');
 

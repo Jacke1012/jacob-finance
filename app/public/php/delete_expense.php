@@ -2,6 +2,7 @@
 include 'db_connect.php'; // defines $conn and $mysql
 
 header('Content-Type: application/json');
+header('Cache-Control: private, max-age=0');
 
 
 $expenseId = $_POST['id'] ?? null;
