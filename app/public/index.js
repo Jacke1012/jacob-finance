@@ -81,6 +81,7 @@ $(document).ready(function () {
             expense_list.forEach(expense => {
                 sum += +expense.amount
             });
+        sum = sum.toFixed(2);
         return sum;
     }
 
