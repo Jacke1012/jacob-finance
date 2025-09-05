@@ -87,23 +87,6 @@ self.addEventListener('fetch', function (event) {
 });
 
 
-// Activate event - cleans up old caches
-self.addEventListener('activate', function (event) {
-  var cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then(function (cacheNames) {
-      return Promise.all(
-        cacheNames.map(function (cacheName) {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
-});
-
-
 function openDB() {
   return new Promise((resolve, reject) => {
     // Check for browser support of IndexedDB
