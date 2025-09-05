@@ -6,7 +6,7 @@ var urlsToCache = [
   '/',
   '/index.html',
   '/index.js',
-  '/sw.js',
+  '/sw_lite.js',
   'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
   'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'
 ];
