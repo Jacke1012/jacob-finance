@@ -23,69 +23,6 @@ self.addEventListener('install', function (event) {
 });
 
 
-self.addEventListener('fetch', function (event) {
-  if (event.request.method === "GET") {
-    event.respondWith(
-      fetch(event.request).then(function (response) {
-        // Check if we received a valid response
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-
-        // IMPORTANT: Clone the response. A response is a stream and because we want the browser to consume the response
-        // as well as the cache consuming the response, we need to clone it so we have two streams.
-        var responseToCache = response.clone();
-
-        caches.open(CACHE_NAME)
-          .then(function (cache) {
-            cache.put(event.request, responseToCache);
-          });
-
-        return response;
-      }).catch(function () {
-        let url = new URL(event.request.url);
-        if (url.pathname === "/php/currentTime.php") {
-          //console.log(event.request.url)
-          let date_now = new Date(Date.now());
-          //console.log(date_now.toLocaleString("sv-SE"))
-
-          const my_date_options = {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          };
-
-
-          //console.log(JSON.stringify(date_now))
-          let myjson = { "currentTime": date_now.toLocaleString("sv-SE", my_date_options) };
-          let myHeaders = new Headers();
-          myHeaders.append("Content-Type", "text/html; charset=UTF-8")
-          let myOptions = { status: 200, headers: myHeaders };
-
-          let res = new Response(JSON.stringify(myjson), myOptions)
-          return res;
-        }
-        else {
-          // If the network request failed, try to get it from the cache.
-          return caches.match(event.request)
-            .then(function (response) {
-              // If we found a match in the cache, return it. Otherwise, if it was a navigation request, return the offline page.
-              if (response) {
-                return response;
-              } else if (event.request.mode === 'navigate') {
-                return caches.match('/');
-              }
-            });
-        }
-
-
-      })
-    );
-  }
-});
-
 
 function openDB() {
   return new Promise((resolve, reject) => {
