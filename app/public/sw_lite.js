@@ -22,37 +22,3 @@ self.addEventListener('install', function (event) {
   );
 });
 
-
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    // Check for browser support of IndexedDB
-    if (!('indexedDB' in self)) {
-      reject('This browser doesn\'t support IndexedDB');
-      return;
-    }
-
-    // Open (or create) the database
-    const request = indexedDB.open('postRequestsDB', 1); // '1' is the version of the database
-
-    // Create the schema
-    request.onupgradeneeded = function (event) {
-      const db = event.target.result;
-
-      // Create an object store for this database if it doesn't already exist
-      if (!db.objectStoreNames.contains('postRequests')) {
-        db.createObjectStore('postRequests', { autoIncrement: true });
-      }
-    };
-
-    request.onerror = function (event) {
-      // Generic error handler for all errors targeted at this database's requests
-      reject('Database error: ' + event.target.errorCode);
-    };
-
-    request.onsuccess = function (event) {
-      resolve(event.target.result); // The result is the opened database
-    };
-  });
-}
-
