@@ -1,12 +1,13 @@
 <?php
-include 'db_connect.php'; // should define $conn and $mysql
+require 'db_connect.php'; // should define $conn and $mysql
 
 #$date_one = $_GET['date_one'] ?? null;
 #$date_two = $_GET['date_two'] ?? null;
 $week_number = $_GET['week_number'] ?? null;
 $year_input = $_GET['year_input'] ?? null;
 
-$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
+//$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
+$userEmail = $decoded->email;
 
 header('Cache-Control: private, max-age=0');
 
@@ -14,7 +15,7 @@ header('Content-Type: application/json');
 
 
 $sql = "
-    SELECT *
+    SELECT amount, company, date_time, id, description
     FROM expenses
     WHERE user_email=$3
     AND EXTRACT(YEAR FROM date_time) = $1

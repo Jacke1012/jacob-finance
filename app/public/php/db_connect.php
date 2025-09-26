@@ -1,4 +1,5 @@
 <?php
+require 'validate_jwt.php';
 //$servername = "localhost";
 //$username = "financeUser";
 //$password = "financeUser";

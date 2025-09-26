@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/validate_jwt.php';
+require_once 'validate_jwt.php';
 
 header('Content-Type: text/html; charset=utf-8');
 echo "<h1>Cloudflare Access JWT Verified ✅</h1>";
