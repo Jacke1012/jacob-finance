@@ -4,8 +4,8 @@ include 'db_connect.php'; // should define $conn and $mysql
 $year  = $_GET['year']  ?? null;
 $month = $_GET['month'] ?? null;
 
-$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
-
+//$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
+$userEmail = $decoded->email;
 
 header('Content-Type: application/json');
 header('Cache-Control: private, max-age=0');
@@ -17,7 +17,8 @@ if (!is_numeric($year) || !is_numeric($month)) {
 }
 
 $sql = "
-    SELECT * FROM expenses
+    SELECT amount, company, date_time, id, description
+    FROM expenses
     WHERE user_email=$3
     AND date_time >= make_date($1::int, $2::int, 1)
     AND date_time <  (make_date($1::int, $2::int, 1) + INTERVAL '1 month')
