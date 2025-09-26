@@ -111,6 +111,6 @@ $decoded->identity_nonce
 $decoded->sub          // subject
 $decoded->nbf, ->iat, ->exp
 */
-header('X-Auth-User: ' . ($decoded->email ?? 'unknown'));
+//header('X-Auth-User: ' . ($decoded->email ?? 'unknown'));
 echo 'OK, token valid';
 
