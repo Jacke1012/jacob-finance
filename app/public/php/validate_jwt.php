@@ -2,7 +2,7 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\JWK;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 // ---- CONFIG ----
 $teamName = 'jjhomese';            // e.g. 'acme'
@@ -72,7 +72,8 @@ if (!$key) {
 // ---- VERIFY SIGNATURE & STANDARD CLAIMS ----
 try {
     // RS256 is used by Cloudflare Access
-    $decoded = JWT::decode($token, $key, ['RS256']);
+    // OLD: $decoded = JWT::decode($token, $key, ['RS256']);
+    $decoded = JWT::decode($token, $key);
 } catch (Throwable $e) {
     http_response_code(401);
     echo 'Invalid token: ' . $e->getMessage();
