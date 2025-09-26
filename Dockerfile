@@ -1,10 +1,29 @@
 # syntax=docker/dockerfile:1
+########## Stage 1: install PHP deps with Composer ##########
+FROM composer:2 AS vendor
+WORKDIR /app
+
+# Copy only what Composer needs first (better layer caching)
+COPY app/composer.json app/composer.lock* ./
+
+# Install deps (cache downloads with BuildKit)
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    composer install --no-dev --prefer-dist --no-interaction --no-progress \
+      --optimize-autoloader --classmap-authoritative \
+      --no-ansi --audit --cache-dir=/tmp/composer-cache
+
+# If your app has autoloadable code or scripts that affect autoload:
+# COPY app/ .
+# RUN composer dump-autoload --optimize --classmap-authoritative
+
+
+########## Stage 2: runtime (nginx + php-fpm) ##########
 FROM alpine:3.22
 
 # Tiny runtime
 RUN apk add --no-cache \
     nginx php83 php83-fpm php83-opcache supervisor \
-    php83-pgsql
+    php83-pgsql php83-openssl php83-sodium
 #php83-mysqli
 
 ARG APP_UID=10001
@@ -27,8 +46,8 @@ COPY config/php-fpm.d/zz-env.conf       /etc/php83/php-fpm.d/zz-env.conf
 COPY config/99-opcache.ini              /etc/php83/conf.d/99-opcache.ini
 
 # App
-#COPY app /var/www
 COPY --chown=web:web app /var/www
+COPY --chown=web:web --from=vendor /app/vendor /var/www/vendor
 
 USER web
 
