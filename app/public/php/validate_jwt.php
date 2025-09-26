@@ -5,8 +5,8 @@ use Firebase\JWT\JWK;
 require __DIR__ . '/vendor/autoload.php';
 
 // ---- CONFIG ----
-$teamName = 'YOUR_TEAM_NAME';            // e.g. 'acme'
-$expectedAud = 'YOUR_AUD_TAG';           // e.g. '9c0fd1b7b7c0a...'
+$teamName = 'jjhomese';            // e.g. 'acme'
+$expectedAud = '7766261b42c9544a9ca04b3f705f07e107278298a118104b454456e058dd8ba8';           // e.g. '9c0fd1b7b7c0a...'
 $expectedIss = "https://{$teamName}.cloudflareaccess.com"; // issuer
 $jwksUrl    = "https://{$teamName}.cloudflareaccess.com/cdn-cgi/access/certs";
 
