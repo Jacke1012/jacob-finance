@@ -8,9 +8,10 @@ COPY app/composer.json app/composer.lock* ./
 
 # Install deps (cache downloads with BuildKit)
 RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache \
     composer install --no-dev --prefer-dist --no-interaction --no-progress \
       --optimize-autoloader --classmap-authoritative \
-      --no-ansi --audit --cache-dir=/tmp/composer-cache
+      --no-ansi --audit
 
 # If your app has autoloadable code or scripts that affect autoload:
 # COPY app/ .

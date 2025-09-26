@@ -1,123 +1,115 @@
 <?php
-/**
- * Validate a JWT without third-party packages.
- * Supports HS256 (shared secret) and RS256 (RSA public key).
- *
- * @param string      $jwt           The compact JWS string "header.payload.signature"
- * @param string|OpenSSLAsymmetricKey|resource $key  HS256: shared secret; RS256: PEM public key string/resource
- * @param array       $allowedAlgs   e.g. ['HS256'] or ['RS256'] or both
- * @param array       $options       ['leeway'=>0,'iss'=>null,'aud'=>null,'require'=>[]]
- * @return array|null Returns the payload (claims) if valid; null otherwise
- */
-function jwt_validate(string $jwt, $key, array $allowedAlgs = ['HS256'], array $options = [])
-{
-    $opts = array_merge([
-        'leeway'  => 0,           // seconds of clock skew allowed for exp/nbf/iat
-        'iss'     => null,        // expected issuer (string or array)
-        'aud'     => null,        // expected audience (string or array)
-        'require' => [],          // list of claim names that MUST be present
-        'now'     => time(),      // overrideable for testing
-    ], $options);
+use Firebase\JWT\JWT;
+use Firebase\JWT\JWK;
 
-    // 1) Split token
-    $parts = explode('.', $jwt);
-    if (count($parts) !== 3) return null;
-    [$b64Header, $b64Payload, $b64Signature] = $parts;
+require __DIR__ . '/vendor/autoload.php';
 
-    // 2) Decode JSON
-    $header  = json_decode(b64url_decode($b64Header), true, 512, JSON_THROW_ON_ERROR);
-    $payload = json_decode(b64url_decode($b64Payload), true, 512, JSON_THROW_ON_ERROR);
-    $sig     = b64url_decode($b64Signature);
+// ---- CONFIG ----
+$teamName = 'YOUR_TEAM_NAME';            // e.g. 'acme'
+$expectedAud = 'YOUR_AUD_TAG';           // e.g. '9c0fd1b7b7c0a...'
+$expectedIss = "https://{$teamName}.cloudflareaccess.com"; // issuer
+$jwksUrl    = "https://{$teamName}.cloudflareaccess.com/cdn-cgi/access/certs";
 
-    // 3) Basic header checks
-    if (!is_array($header) || !isset($header['alg'])) return null;
-    $alg = $header['alg'];
-    if ($alg === 'none') return null;                // never allow "none"
-    if (!in_array($alg, $allowedAlgs, true)) return null;
-    if (($header['typ'] ?? 'JWT') !== 'JWT') { /* optional strictness */ }
+// ---- GET TOKEN ----
+// Cloudflare will send either the header or the cookie. Prefer the header.
+$token = $_SERVER['HTTP_CF_ACCESS_JWT_ASSERTION'] ?? ($_COOKIE['CF_Authorization'] ?? null);
 
-    // 4) Recompute signature
-    $signingInput = $b64Header . '.' . $b64Payload;
-    $validSig = false;
-
-    switch ($alg) {
-        case 'HS256':
-            if (!is_string($key) || $key === '') return null;
-            $calc = hash_hmac('sha256', $signingInput, $key, true);
-            $validSig = hash_equals($calc, $sig);
-            break;
-
-        case 'RS256':
-            // $key can be a PEM string or an OpenSSL key resource/object
-            $pub = is_string($key) ? openssl_pkey_get_public($key) : $key;
-            if (!$pub) return null;
-            $ok = openssl_verify($signingInput, $sig, $pub, OPENSSL_ALGO_SHA256);
-            if (is_string($key)) { openssl_free_key($pub); } // free only if we created it
-            $validSig = ($ok === 1);
-            break;
-
-        default:
-            return null; // unsupported alg
-    }
-
-    if (!$validSig) return null;
-
-    // 5) Claims validation
-    $now = (int)$opts['now'];
-    $leeway = (int)$opts['leeway'];
-
-    // Required claims (if any)
-    foreach ($opts['require'] as $claim) {
-        if (!array_key_exists($claim, $payload)) return null;
-    }
-
-    // exp (expiration): valid if now <= exp + leeway
-    if (isset($payload['exp']) && is_numeric($payload['exp'])) {
-        if ($now > (int)$payload['exp'] + $leeway) return null;
-    }
-
-    // nbf (not before): valid if now >= nbf - leeway
-    if (isset($payload['nbf']) && is_numeric($payload['nbf'])) {
-        if ($now < (int)$payload['nbf'] - $leeway) return null;
-    }
-
-    // iat (issued at): optional sanity check (not in the future beyond leeway)
-    if (isset($payload['iat']) && is_numeric($payload['iat'])) {
-        if ($now + $leeway < (int)$payload['iat']) return null;
-    }
-
-    // iss (issuer) check
-    if ($opts['iss'] !== null) {
-        $expectedIss = (array)$opts['iss'];
-        if (!isset($payload['iss']) || !in_array($payload['iss'], $expectedIss, true)) {
-            return null;
-        }
-    }
-
-    // aud (audience) check
-    if ($opts['aud'] !== null) {
-        $expectedAud = (array)$opts['aud'];
-        $audClaim = $payload['aud'] ?? null;
-        $audList = is_array($audClaim) ? $audClaim : ($audClaim !== null ? [$audClaim] : []);
-        if (empty(array_intersect($expectedAud, $audList))) return null;
-    }
-
-    // Passed all checks
-    return $payload;
+// Optional: support `Authorization: Bearer <token>` if you proxy it yourself.
+if (!$token && isset($_SERVER['HTTP_AUTHORIZATION']) && str_starts_with($_SERVER['HTTP_AUTHORIZATION'], 'Bearer ')) {
+    $token = substr($_SERVER['HTTP_AUTHORIZATION'], 7);
 }
 
-/** Base64url decoding (RFC 7515) */
-function b64url_decode(string $data): string
-{
-    $data = strtr($data, '-_', '+/');
-    $pad = strlen($data) % 4;
-    if ($pad) { $data .= str_repeat('=', 4 - $pad); }
-    $out = base64_decode($data, true);
-    return $out === false ? '' : $out;
+if (!$token) {
+    http_response_code(401);
+    echo 'Missing Cloudflare Access token';
+    exit;
 }
 
-/** (Optional) Base64url encoding helper if you need to produce JWTs */
-function b64url_encode(string $bin): string
-{
-    return rtrim(strtr(base64_encode($bin), '+/', '-_'), '=');
+// ---- FETCH & CACHE JWK SET ----
+// Cache this (APCu/file) to avoid fetching on every request.
+$cacheFile = sys_get_temp_dir() . '/cf_access_jwks.json';
+$cacheTtl  = 60 * 60; // 1 hour
+
+$jwks = null;
+if (is_file($cacheFile) && (time() - filemtime($cacheFile) < $cacheTtl)) {
+    $jwks = json_decode(file_get_contents($cacheFile), true);
+} else {
+    $jwksJson = file_get_contents($jwksUrl);
+    if ($jwksJson === false) {
+        http_response_code(500);
+        echo 'Failed to fetch Cloudflare JWKs';
+        exit;
+    }
+    $jwks = json_decode($jwksJson, true);
+    file_put_contents($cacheFile, $jwksJson);
 }
+
+if (!isset($jwks['keys'])) {
+    http_response_code(500);
+    echo 'Invalid Cloudflare JWK set';
+    exit;
+}
+
+// ---- PICK KEY BY KID ----
+[$hdrB64] = explode('.', $token) + [null];
+if (!$hdrB64) {
+    http_response_code(401);
+    echo 'Malformed JWT';
+    exit;
+}
+$header = JWT::jsonDecode(JWT::urlsafeB64Decode($hdrB64));
+$kid = $header->kid ?? null;
+
+$keys = JWK::parseKeySet($jwks); // returns [kid => Key]
+$key  = $kid && isset($keys[$kid]) ? $keys[$kid] : null;
+
+if (!$key) {
+    http_response_code(401);
+    echo 'No matching JWK for token kid';
+    exit;
+}
+
+// ---- VERIFY SIGNATURE & STANDARD CLAIMS ----
+try {
+    // RS256 is used by Cloudflare Access
+    $decoded = JWT::decode($token, $key, ['RS256']);
+} catch (Throwable $e) {
+    http_response_code(401);
+    echo 'Invalid token: ' . $e->getMessage();
+    exit;
+}
+
+// ---- VALIDATE APP-SPECIFIC CLAIMS ----
+// iss should be your team Access issuer; aud should contain your app’s AUD tag.
+$issOk = (isset($decoded->iss) && rtrim($decoded->iss, '/') === rtrim($expectedIss, '/'));
+$audOk = false;
+if (isset($decoded->aud)) {
+    // aud may be a string or array
+    $audOk = is_array($decoded->aud) ? in_array($expectedAud, $decoded->aud, true) : ($decoded->aud === $expectedAud);
+}
+
+if (!$issOk || !$audOk) {
+    http_response_code(403);
+    echo 'Token not meant for this application';
+    exit;
+}
+
+// (Optional) More checks:
+if (isset($decoded->exp) && time() >= $decoded->exp) {
+    http_response_code(401);
+    echo 'Token expired';
+    exit;
+}
+
+// ---- SUCCESS ----
+// $decoded now has the claims (email, sub, country, iat, nbf, exp, etc.)
+/*
+Example useful claims:
+$decoded->email        // user’s email
+$decoded->identity_nonce
+$decoded->sub          // subject
+$decoded->nbf, ->iat, ->exp
+*/
+header('X-Auth-User: ' . ($decoded->email ?? 'unknown'));
+echo 'OK, token valid';
+
