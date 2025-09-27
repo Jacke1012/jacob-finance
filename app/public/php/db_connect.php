@@ -13,7 +13,6 @@ require 'validate_jwt.php';
 
 
 $postgreshost = getenv('POSTGRES_HOST') ?: 'localhost';
-$mysqlhost = getenv('MYSQL_HOST') ?: 'localhost';
 $db = getenv('DB_NAME') ?: 'finance';
 $user = getenv('DB_USER') ?: 'financeuser';
 $pass = getenv('DB_PASS') ?: 'supersecret';
