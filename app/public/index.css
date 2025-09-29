@@ -64,7 +64,7 @@ h1, h2, h3, h4, h5, h6 { color: var(--fg); }
 }
 label { color: var(--fg); }
 
-table.table { color: var(--fg); background: var(--card); }
+table.table { color: var(--fg); background: var(--card); border-color: var(--border); }
 .table thead th { border-bottom-color: var(--border); }
 .table td, .table th { border-top-color: var(--border); }
 .table-striped tbody tr:nth-of-type(odd) { background-color: var(--table-stripe); }
