@@ -25,15 +25,6 @@ $client->setAccessToken($token);
 $oauth = new Google_Service_Oauth2($client);
 $me = $oauth->userinfo->get(); // has id, email, verifiedEmail, name, picture
 
-// Basic allowlist example
-$allowedDomains = ['yourcompany.com'];
-$emailDomain = substr(strrchr($me->email, "@"), 1);
-if (!in_array($emailDomain, $allowedDomains, true)) {
-    http_response_code(403);
-    echo "Email domain not allowed.";
-    exit;
-}
-
 // Create your app session
 $_SESSION['user'] = [
     'id' => $me->id,
