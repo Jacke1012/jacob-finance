@@ -24,7 +24,7 @@ FROM alpine:3.22
 # Tiny runtime
 RUN apk add --no-cache \
     nginx php83 php83-fpm php83-opcache supervisor \
-    php83-pgsql php83-openssl php83-sodium
+    php83-pgsql php83-openssl php83-sodium php83-session
 #php83-mysqli
 
 ARG APP_UID=10001
