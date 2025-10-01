@@ -4,28 +4,20 @@ if (empty($_SESSION['user'])) {
     header('Location: /login.php');
     exit;
 }
-require 'validate_jwt.php';
-//$servername = "localhost";
-//$username = "financeUser";
-//$password = "financeUser";
-//$dbname = "finance";
 
-// Create connection
-//$conn = new mysqli($servername, $username, $password, $dbname);
+$user = $_SESSION['user'];
 
-//$conn = new mysqli("mariadb", "user", "pass", "database");
-
-
+$userEmail = $user['email'];
 
 $postgreshost = getenv('POSTGRES_HOST') ?: 'localhost';
 $db = getenv('DB_NAME') ?: 'finance';
-$user = getenv('DB_USER') ?: 'financeuser';
-$pass = getenv('DB_PASS') ?: 'supersecret';
+$sqluser = getenv('DB_USER') ?: 'financeuser';
+$sqlpass = getenv('DB_PASS') ?: 'supersecret';
 $port = getenv('DB_PORT') ?: '5432';
 
 
 
-$conn = pg_connect("host=$postgreshost dbname=$db user=$user password=$pass port=$port");
+$conn = pg_connect("host=$postgreshost dbname=$db user=$sqluser password=$sqlpass port=$port");
 
 if (!$conn) {
     die("Connection failed: " . pg_last_error());
