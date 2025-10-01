@@ -5,7 +5,7 @@ session_start();
 $client = new Google_Client();
 $client->setClientId(getenv('GOOGLE_CLIENT_ID'));
 $client->setClientSecret(getenv('GOOGLE_CLIENT_SECRET'));
-$client->setRedirectUri('https://example.com/oauth2/callback');
+$client->setRedirectUri('https://finance.jacobsweb.link/php/callback.php');
 
 if (!isset($_GET['code'])) {
     http_response_code(400);
