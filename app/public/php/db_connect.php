@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (empty($_SESSION['user'])) {
+    header('Location: /login.php');
+    exit;
+}
 require 'validate_jwt.php';
 //$servername = "localhost";
 //$username = "financeUser";
@@ -18,7 +23,6 @@ $user = getenv('DB_USER') ?: 'financeuser';
 $pass = getenv('DB_PASS') ?: 'supersecret';
 $port = getenv('DB_PORT') ?: '5432';
 
-#$mysql = getenv('MYSQL_BOOL') ?: false;
 
 
 $conn = pg_connect("host=$postgreshost dbname=$db user=$user password=$pass port=$port");
