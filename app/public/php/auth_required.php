@@ -6,7 +6,7 @@ $c = auth_config();
 $cookie = $_COOKIE[$c['cookie_name']] ?? null;
 
 if (!$cookie) {
-  header('Location: /login.php');  // or 401 JSON for APIs
+  header('Location: /php/login.php');  // or 401 JSON for APIs
   exit;
 }
 
@@ -14,14 +14,14 @@ try {
   $token = verify_jwt($cookie);
 } catch (Throwable $e) {
   clear_auth_cookie();
-  header('Location: /login.php');
+  header('Location: /php/login.php');
   exit;
 }
 
 // Optional: enforce iss/aud in case config changed
 if (($token->iss ?? '') !== $c['iss'] || ($token->aud ?? '') !== $c['aud']) {
   clear_auth_cookie();
-  header('Location: /login.php');
+  header('Location: /php/login.php');
   exit;
 }
 
