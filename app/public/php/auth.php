@@ -3,7 +3,7 @@
 return [
   // keep in a Kubernetes Secret and inject via env
   'jwt_secret' => getenv('JWT_SECRET') ?: 'dev-only-change-me',
-  'cookie_name' => 'auth',
+  'cookie_name' => 'financeauth',
   'cookie_domain' => 'finance.jacobsweb.link',         // e.g. '.jacobsweb.link' if you need subdomains
   'cookie_path' => '/',
   'cookie_secure' => true,       // HTTPS only in prod

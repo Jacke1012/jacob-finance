@@ -3,7 +3,7 @@
 require __DIR__ . '/jwt_cookie.php';
 
 $c = auth_config();
-$cookie = $_COOKIE[$c['cookie_name']] ?? null;
+$cookie = $_COOKIE[$c['financeauth']] ?? null;
 
 if (!$cookie) {
   header('Location: /php/login.php');  // or 401 JSON for APIs
