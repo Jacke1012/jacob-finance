@@ -3,8 +3,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/jwt_cookie.php';
 
 
-session_start();
-
 $client = new Google_Client();
 $client->setClientId(getenv('GOOGLE_CLIENT_ID'));
 $client->setClientSecret(getenv('GOOGLE_CLIENT_SECRET'));
