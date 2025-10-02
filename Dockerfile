@@ -24,7 +24,7 @@ FROM alpine:3.22
 # Tiny runtime
 RUN apk add --no-cache \
     nginx php83 php83-fpm php83-opcache supervisor \
-    php83-pgsql php83-openssl php83-sodium php83-session php83-redis
+    php83-pgsql php83-openssl php83-sodium
 #php83-mysqli
 
 ARG APP_UID=10001
@@ -44,7 +44,6 @@ COPY config/nginx.conf                  /etc/nginx/nginx.conf
 COPY config/supervisord.conf            /etc/supervisord.conf
 COPY config/php-fpm.d/www.conf          /etc/php83/php-fpm.d/www.conf
 COPY config/php-fpm.d/zz-env.conf       /etc/php83/php-fpm.d/zz-env.conf
-COPY config/98-redis.ini                /etc/php83/conf.d/98-redis.ini
 COPY config/99-opcache.ini              /etc/php83/conf.d/99-opcache.ini
 
 # App
