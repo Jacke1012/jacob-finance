@@ -41,3 +41,4 @@ $user = [
   'email'   => $token->email ?? null,
   'name'    => $token->name ?? null,
 ];
+error_log($user['email']);

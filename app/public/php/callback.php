@@ -27,9 +27,9 @@ $me = $oauth->userinfo->get(); // has id, email, verifiedEmail, name, picture
 
 
 $jwt = issue_jwt([
-  'sub'     => $sub,        // stable user id from IdP
-  'email'   => $email,
-  'name'    => $name ?? null
+  'id' => $me->id,
+  'email' => $me->email,
+  'name' => $me->name ?? null
 ]);
 
 set_auth_cookie($jwt);
