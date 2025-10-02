@@ -4,7 +4,7 @@ FROM alpine:3.22
 
 # Tiny runtime
 RUN apk add --no-cache \
-    nginx
+    nginx supervisor
 
 ARG APP_UID=10001
 ARG APP_GID=10001
