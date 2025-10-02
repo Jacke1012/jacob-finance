@@ -6,7 +6,6 @@ $amount      = $_POST['amount'] ?? null;
 $company     = $_POST['company'] ?? null;
 $description = $_POST['description'] ?? null;
 $edit_id   = $_POST['edit_id'] ?? null;
-$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
 header('Cache-Control: private, max-age=0');
 
 

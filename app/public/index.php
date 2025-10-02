@@ -1,3 +1,7 @@
+<?php
+require __DIR__ . '/php/auth_required.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

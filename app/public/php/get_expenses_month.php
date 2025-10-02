@@ -4,8 +4,6 @@ include 'db_connect.php'; // should define $conn and $mysql
 $year  = $_GET['year']  ?? null;
 $month = $_GET['month'] ?? null;
 
-//$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
-$userEmail = $decoded->email;
 
 header('Content-Type: application/json');
 header('Cache-Control: private, max-age=0');

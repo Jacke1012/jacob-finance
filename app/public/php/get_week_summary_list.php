@@ -10,8 +10,6 @@ header('Cache-Control: private, max-age=10');
 $week_number = $_GET['week_number'] ?? null;
 $year_input = $_GET['year_input'] ?? null;
 
-$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
-
 
 header('Content-Type: application/json');
 
