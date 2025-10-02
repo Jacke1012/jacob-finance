@@ -1,5 +1,4 @@
 <?php
-// lib/jwt_cookie.php
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
