@@ -2,9 +2,6 @@
 
 require __DIR__ . '/auth_required.php';
 
-
-$user = $_SESSION['user'];
-
 $userEmail = $user['email'];
 
 $postgreshost = getenv('POSTGRES_HOST') ?: 'localhost';
