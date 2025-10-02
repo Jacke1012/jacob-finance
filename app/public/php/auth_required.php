@@ -28,8 +28,7 @@ if (($token->iss ?? '') !== $c['iss'] || ($token->aud ?? '') !== $c['aud']) {
 // Sliding refresh: if < refresh window, reissue a new cookie
 if (remaining_ttl($token) < $c['refresh_if_remaining']) {
   $jwt = issue_jwt([
-    'sub'     => $token->sub,
-    'email'   => $token->email ?? null,
+    'email'   => $token->email,
     'name'    => $token->name ?? null,
   ]);
   set_auth_cookie($jwt);
@@ -37,8 +36,7 @@ if (remaining_ttl($token) < $c['refresh_if_remaining']) {
 
 // Expose a convenient $user array to the page
 $user = [
-  'id'      => $token->sub,
-  'email'   => $token->email ?? null,
+  'email'   => $token->email,
   'name'    => $token->name ?? null,
 ];
 error_log($user['email']);

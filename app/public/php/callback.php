@@ -27,7 +27,6 @@ $me = $oauth->userinfo->get(); // has id, email, verifiedEmail, name, picture
 
 
 $jwt = issue_jwt([
-  'id' => $me->id,
   'email' => $me->email,
   'name' => $me->name ?? null
 ]);
