@@ -1,5 +1,7 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/jwt_cookie.php';
+
 
 session_start();
 
@@ -25,12 +27,14 @@ $client->setAccessToken($token);
 $oauth = new Google_Service_Oauth2($client);
 $me = $oauth->userinfo->get(); // has id, email, verifiedEmail, name, picture
 
-// Create your app session
-$_SESSION['user'] = [
-    'id' => $me->id,
-    'email' => $me->email,
-    'name' => $me->name,
-    'picture' => $me->picture,
-];
+
+$jwt = issue_jwt([
+  'sub'     => $sub,        // stable user id from IdP
+  'email'   => $email,
+  'name'    => $name ?? null
+]);
+
+set_auth_cookie($jwt);
+
 header('Location: /'); // go to your app
 exit;

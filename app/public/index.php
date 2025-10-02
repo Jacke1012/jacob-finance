@@ -1,9 +1,6 @@
 <?php
-session_start();
-if (empty($_SESSION['user'])) {
-    header('Location: /php/login.php');
-    exit;
-}
+require __DIR__ . '/php/auth_required.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
