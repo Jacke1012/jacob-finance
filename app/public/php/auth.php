@@ -9,8 +9,9 @@ return [
   'cookie_secure' => true,       // HTTPS only in prod
   'cookie_httponly' => true,     // JS can't read it
   'cookie_samesite' => 'Lax',    // or 'Strict'/'None' (None requires Secure)
-  'ttl' => 15 * 60,              // 15 min token lifetime
-  'refresh_if_remaining' => 5 * 60, // reissue if <5 min left (sliding)
+  'ttl' => 8 * 60 * 60,
+  'refresh_if_remaining' => 3 * 60 * 60,
+  'absolute_ttl' => 48 * 60 * 60,
   'iss' => 'https://finance.jacobsweb.link',
   'aud' => 'finance-app',
 ];
