@@ -14,3 +14,8 @@ return [
   'iss' => 'https://finance.jacobsweb.link',
   'aud' => 'finance-app',
 ];
+
+//kubectl create secret generic finance-secrets \
+// --from-literal=jwt-secret=$(openssl rand -hex 32) \
+// -n finance
+
