@@ -41,5 +41,4 @@ $user = [
   'id'      => $token->sub,
   'email'   => $token->email ?? null,
   'name'    => $token->name ?? null,
-  'picture' => $token->picture ?? null,
 ];
