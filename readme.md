@@ -3,8 +3,8 @@
 **Jacob Finance** is a self-hosted finance / budget app built with modern tooling. It’s meant to help you manage your financial data, track budgets and expenses, and run it locally (or on your server) via Docker.
 
 Live examples:  
-- 🌐 <a href="https://jacobsweb.link" target="_blank">jacobsweb.link</a>  
-- 🌐 <a href="https://finance.jacobsweb.link" target="_blank">finance.jacobsweb.link</a>  
+- 🌐 [jacobsweb.link](https://jacobsweb.link)  
+- 🌐 [finance.jacobsweb.link](https://finance.jacobsweb.link)  
 
 ---
 
