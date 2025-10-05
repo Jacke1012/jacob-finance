@@ -1,7 +1,5 @@
-version: "3.9"
-
 services:
-  app:
+  finance-landing:
     build: .
     container_name: finance-landing
     restart: unless-stopped
