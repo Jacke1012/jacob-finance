@@ -1,5 +1,7 @@
 services:
   finance-landing:
+    context: ./
+    dockerfile: ./Dockerfile
     build: .
     container_name: finance-landing
     restart: unless-stopped
