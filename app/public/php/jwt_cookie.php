@@ -30,7 +30,7 @@ function verify_jwt(string $jwt): object {
 function set_auth_cookie(string $jwt): void {
   $c = auth_config();
   $params = [
-    'expires'  => 0, // session cookie (browser lifetime); JWT has exp inside
+    'expires'  => time() + $c['ttl'],
     'path'     => $c['cookie_path'],
     'domain'   => $c['cookie_domain'] ?: null,
     'secure'   => $c['cookie_secure'],
