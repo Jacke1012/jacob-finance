@@ -1,6 +1,6 @@
 <?php
 // auth_required.php
-require __DIR__ . '/jwt_cookie.php';
+require_once __DIR__ . '/jwt_cookie.php';
 
 $c = auth_config();
 $cookie = $_COOKIE[$c['cookie_name']] ?? null;

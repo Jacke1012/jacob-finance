@@ -1,10 +1,6 @@
 <?php
 
 require __DIR__ . '/auth_required.php';
-require __DIR__ . '/jwt_cookie.php';
-
-
-echo verify_jwt($_COOKIE[$c['cookie_name']]);
 
 header('Content-Type: text/html; charset=utf-8');
 echo "<h1>Cloudflare Access JWT Verified ✅</h1>";
