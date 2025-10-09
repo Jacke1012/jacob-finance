@@ -2,6 +2,19 @@
 // auth_required.php
 require_once __DIR__ . '/jwt_cookie.php';
 
+// Check environment mode
+$env = getenv('APP_ENV') ?: 'prod';
+
+if ($env === 'dev') {
+  // Development mode: skip authentication entirely
+  $user = [
+    'email' => 'dev@example.com',
+    'name'  => 'Developer Mode',
+  ];
+  error_log("DEV MODE active - auto login as {$user['email']}");
+  return; // Skip the rest of the auth logic
+}
+
 $c = auth_config();
 $cookie = $_COOKIE[$c['cookie_name']] ?? null;
 

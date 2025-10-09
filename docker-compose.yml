@@ -10,6 +10,7 @@ services:
       - DB_NAME=finance
       - DB_USER=financeuser
       - DB_PASS=supersecret
+      - APP_ENV=dev
 
   # mariadb:
   #   image: mariadb:10.5
