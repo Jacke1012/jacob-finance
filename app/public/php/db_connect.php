@@ -18,4 +18,17 @@ if (!$conn) {
     die("Connection failed: " . pg_last_error());
 }
 
+$sql = "
+    INSERT INTO users (email)
+    VALUES ($1)
+    ON CONFLICT(email) DO NOTHING;
+";
+
+$result = pg_query_params($conn, $sql, [$userEmail]);
+if (!$result) {
+    echo json_encode(["error" => pg_last_error($conn)]);
+    pg_close($conn);
+    exit;
+}
+
 ?>

@@ -16,13 +16,29 @@ if ($date_time && strpos($date_time, 'T') !== false) {
 
 
 if (empty($edit_id)){
-    $sql = 'INSERT INTO expenses (date_time, amount, description, company, user_email) VALUES ($1, $2, $3, $4, $5)';
+    $sql = "
+    INSERT INTO expenses (date_time, amount, description, company, user_id)
+    VALUES (
+        $1,
+        $2,
+        $3,
+        $4,
+        (SELECT id FROM users WHERE email = $5)
+    )";
 
     $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company, $userEmail]);
 }
 else{
-    $sql = 'UPDATE expenses SET date_time=$1, amount=$2, description=$3, company=$4 WHERE id=$5 AND user_email=$6';
-
+    $sql = "
+    UPDATE expenses
+    SET date_time = $1,
+        amount = $2,
+        description = $3,
+        company = $4
+    WHERE id = $5
+      AND user_id = (SELECT id FROM users WHERE email = $6)
+      ";
+      
     $result = pg_query_params($conn, $sql, [$date_time, $amount, $description, $company, $edit_id, $userEmail]);
 }
 

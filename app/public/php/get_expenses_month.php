@@ -15,14 +15,14 @@ if (!is_numeric($year) || !is_numeric($month)) {
 }
 
 $sql = "
-    SELECT amount, company, date_time, id, description
-    FROM expenses
-    WHERE user_email=$3
-    AND date_time >= make_date($1::int, $2::int, 1)
-    AND date_time <  (make_date($1::int, $2::int, 1) + INTERVAL '1 month')
-    ORDER BY date_time DESC
+    SELECT e.amount, e.company, e.date_time, e.id, e.description
+    FROM expenses e
+    JOIN users u ON e.user_id = u.id
+    WHERE u.email = $3
+    AND e.date_time >= make_date($1::int, $2::int, 1)
+    AND e.date_time <  (make_date($1::int, $2::int, 1) + INTERVAL '1 month')
+    ORDER BY e.date_time DESC
 ";
-
 $result = pg_query_params($conn, $sql, [$year, $month, $userEmail]);
 if (!$result) {
     echo json_encode(["error" => pg_last_error($conn)]);

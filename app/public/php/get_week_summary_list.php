@@ -15,11 +15,12 @@ header('Content-Type: application/json');
 
 
 $sql = "
-    SELECT amount
-    FROM expenses
-    WHERE user_email=$1
-    AND EXTRACT(YEAR FROM date_time) = $2
-    AND EXTRACT(WEEK FROM date_time) = $3
+    SELECT e.amount
+    FROM expenses e
+    JOIN users u ON e.user_id = u.id
+    WHERE u.email=$1
+    AND EXTRACT(YEAR FROM e.date_time) = $2
+    AND EXTRACT(WEEK FROM e.date_time) = $3
 ";
 
 $result = pg_query_params($conn, $sql, [$userEmail, $year_input,$week_number]);

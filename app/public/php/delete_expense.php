@@ -7,14 +7,13 @@ header('Cache-Control: private, max-age=0');
 
 $expenseId = $_POST['id'] ?? null;
 
-$userEmail = $_SERVER['HTTP_CF_ACCESS_AUTHENTICATED_USER_EMAIL'] ?? 'invalid';
-
-
 
 $sql = "
-    DELETE
-    FROM expenses
-    WHERE user_email=$1 AND id=$2
+    DELETE FROM expenses e
+    USING users u
+    WHERE e.user_id = u.id
+        AND u.email = $1
+        AND e.id = $2;
 ";
 
 $result = pg_query_params($conn, $sql, [$userEmail, $expenseId]);
