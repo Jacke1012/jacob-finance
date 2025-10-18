@@ -4,7 +4,7 @@ return [
   // keep in a Kubernetes Secret and inject via env
   'jwt_secret' => getenv('JWT_SECRET') ?: 'dev-only-change-me',
   'cookie_name' => 'financeauth',
-  'cookie_domain' => 'finance.jacobsweb.link',         // e.g. '.jacobsweb.link' if you need subdomains
+  'cookie_domain' => 'app.finance.jacobsweb.link',         // e.g. '.jacobsweb.link' if you need subdomains
   'cookie_path' => '/',
   'cookie_secure' => true,       // HTTPS only in prod
   'cookie_httponly' => true,     // JS can't read it
@@ -12,7 +12,7 @@ return [
   'ttl' => 24 * 60 * 60,
   'refresh_if_remaining' => 12 * 60 * 60,
   'absolute_ttl' => 96 * 60 * 60,
-  'iss' => 'https://finance.jacobsweb.link',
+  'iss' => 'https://app.finance.jacobsweb.link',
   'aud' => 'finance-app',
 ];
 
