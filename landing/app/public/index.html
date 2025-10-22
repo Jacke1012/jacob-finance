@@ -1,274 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jacob Finance — How It Works</title>
-  <meta name="description" content="How Jacob Finance works: a simple, free web app to record transactions with amount, date, company, and description. Sign in with Google to get started." />
-  <meta property="og:title" content="Jacob Finance — How It Works" />
-  <meta property="og:description" content="A simple, free finance tracker. Add amount, date, company, and description. Google sign‑in. Your data stays yours." />
-  <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#111827" />
-  <style>
-    :root{
-      --bg: #0b1220; /* deep navy */
-      --panel: #0f182a; /* card background */
-      --muted: #9CA3AF; /* slate-400 */
-      --text: #E5E7EB; /* slate-200 */
-      --brand: #60A5FA; /* blue-400 */
-      --brand-2: #A78BFA; /* violet-400 */
-      --ok: #34D399; /* emerald-400 */
-      --warning: #FBBF24; /* amber-400 */
-      --danger: #F87171; /* red-400 */
-      --radius: 16px;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --maxw: 1120px;
-    }
-    html, body { height: 100%; }
-    body{
-      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 700px at 75% -10%, rgba(96,165,250,.15), transparent 60%),
-                  radial-gradient(900px 600px at -10% 10%, rgba(167,139,250,.18), transparent 55%),
-                  var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    }
-    a { color: var(--brand); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
-    header{
-      position: sticky; top: 0; z-index: 30;
-      backdrop-filter: saturate(120%) blur(10px);
-      background: linear-gradient(to bottom, rgba(11,18,32,.85), rgba(11,18,32,.55));
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .nav{ display: flex; align-items: center; justify-content: space-between; height: 64px; }
-    .brand{ display:flex; align-items:center; gap:12px; font-weight: 700; letter-spacing:.2px; }
-    .logo{ width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: var(--shadow); }
-    .nav a.btn{ padding:10px 14px; border-radius: 12px; background: linear-gradient(135deg, rgba(96,165,250,.15), rgba(167,139,250,.15)); border:1px solid rgba(255,255,255,.12); }
-    .nav a.btn:hover{ background: linear-gradient(135deg, rgba(96,165,250,.24), rgba(167,139,250,.24)); text-decoration: none; }
-
-    .hero{ padding: 72px 0 36px; text-align: center; }
-    .hero h1{ font-size: clamp(32px, 4vw, 48px); line-height: 1.05; margin: 0 0 12px; }
-    .hero p.sub{ margin: 0 auto; color: var(--muted); max-width: 680px; font-size: 18px; }
-    .cta-row{ display:flex; gap:12px; justify-content:center; margin-top:24px; flex-wrap: wrap; }
-    .cta{ display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius: 14px; font-weight: 600; }
-    .cta.primary{ background: linear-gradient(135deg, var(--brand), var(--brand-2)); color:#0b1220; box-shadow: var(--shadow); }
-    .cta.secondary{ background: rgba(255,255,255,.06); color: var(--text); border:1px solid rgba(255,255,255,.12); }
-
-    .grid{ display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); }
-    .card{ background: var(--panel); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
-
-    .section{ padding: 36px 0; }
-    .section h2{ font-size: 28px; margin: 0 0 8px; }
-    .section p.lead{ color: var(--muted); margin:0 0 18px; }
-
-    .steps{ counter-reset: step; }
-    .step{ position: relative; padding-left: 56px; margin: 14px 0; }
-    .step:before{
-      counter-increment: step; content: counter(step);
-      position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 12px;
-      display: grid; place-items: center; font-weight: 800; color:#0b1220;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      box-shadow: 0 6px 16px rgba(0,0,0,.25);
-    }
-    .check{ display:inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(52,211,153,.12); color: var(--ok); font-weight: 700; font-size: 12px; border:1px solid rgba(52,211,153,.35); }
-
-    .features{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:14px; }
-    .feature{ background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding:16px; }
-    .feature h3{ margin: 8px 0 6px; font-size: 18px; }
-    .feature p{ margin: 0; color: var(--muted); }
-
-    .faq{ display:grid; gap: 12px; }
-    details{ background: var(--panel); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding:14px 16px; }
-    summary{ cursor:pointer; font-weight: 600; }
-    details p{ color: var(--muted); margin: 10px 0 0; }
-
-    footer{ border-top: 1px solid rgba(255,255,255,.08); margin-top: 32px; }
-    .foot{ display:flex; flex-wrap: wrap; align-items:center; gap:12px; justify-content: space-between; padding: 18px 0; color: var(--muted); font-size: 14px; }
-
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    .kbd{ padding: 2px 6px; border:1px solid rgba(255,255,255,.18); border-bottom-width:2px; border-radius: 8px; background: rgba(255,255,255,.06); font-size: .95em; }
-
-    @media (min-width: 900px){
-      .col-7{ grid-column: span 7; }
-      .col-5{ grid-column: span 5; }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jacob Finance — Simple free transaction tracker</title>
+<meta name="description" content="Free, no‑nonsense finance tracker. Add amount, date, company, description. Sign in with Google and start logging in seconds." />
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <div class="wrap nav">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <span>Jacob Finance</span>
-      </div>
-      <nav aria-label="Primary">
-        <a class="btn" href="#how">How it works</a>
-        <a class="btn" href="#features">Features</a>
-        <a class="btn" href="#faq">FAQ</a>
-        <a class="btn" href="https://finance.jacobsweb.link/" target="_blank" rel="noopener">Open App</a>
-        <a class="btn" href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero wrap" id="top">
-      <h1>Track transactions the simple way.</h1>
-      <p class="sub">Free, no‑nonsense web app to record <strong>Amount</strong>, <strong>Date</strong>, <strong>Company</strong>, and <strong>Description</strong>. Sign in with Google and start logging in seconds.</p>
-      <div class="cta-row" role="group" aria-label="Primary calls">
-        <a class="cta primary" href="https://finance.jacobsweb.link/" target="_blank" rel="noopener">Open the free app</a>
-        <a class="cta secondary" href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">View source on GitHub</a>
-      </div>
-    </section>
-
-    <section class="section wrap" id="how">
-      <div class="grid">
-        <div class="col-7">
-          <h2>How it works</h2>
-          <p class="lead">Jacob Finance is built for speed and clarity. There’s just one job: capture the essentials of each transaction—nothing more, nothing less.</p>
-          <div class="steps">
-            <div class="step">
-              <h3 class="mono">1. Sign in with Google</h3>
-              <p>Click <span class="kbd">Sign in with Google</span> inside the app and approve access. We only use Google to authenticate <em>you</em>—no posting, no email spam.</p>
-            </div>
-            <div class="step">
-              <h3 class="mono">2. Add a transaction</h3>
-              <p>Hit <span class="kbd">New</span> and fill four fields: <strong>Amount</strong>, <strong>Date</strong>, <strong>Company</strong>, <strong>Description</strong>. Save. That’s it.</p>
-            </div>
-            <div class="step">
-              <h3 class="mono">3. See your list instantly</h3>
-              <p>New entries appear in your table immediately so you can skim, sort, or find what you just added.</p>
-            </div>
-            <div class="step">
-              <h3 class="mono">4. Free forever</h3>
-              <p><span class="check">FREE TIER</span> The app is completely free. There are no paid tiers or hidden upgrades.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-5">
-          <div class="card">
-            <h3 style="margin:8px 0 4px;">What you can record</h3>
-            <ul>
-              <li><strong>Amount</strong> — e.g., <span class="mono">199.00</span></li>
-              <li><strong>Date</strong> — the transaction date</li>
-              <li><strong>Company</strong> — merchant or payer</li>
-              <li><strong>Description</strong> — any details you want to remember</li>
-            </ul>
-            <hr style="border:0; border-top:1px solid rgba(255,255,255,.08); margin:12px 0;"/>
-            <p style="margin:0; color:var(--muted);">No categories, budgets, or reports to fuss with—just the core facts so you can stay consistent.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section wrap" id="features">
-      <h2>Key features</h2>
-      <p class="lead">Lean by design. Everything you need to log transactions quickly—and nothing in your way.</p>
-      <div class="features">
-        <div class="feature">
-          <h3>Google sign‑in</h3>
-          <p>Use your Google account to authenticate securely. No extra passwords to remember.</p>
-        </div>
-        <div class="feature">
-          <h3>Fast entry</h3>
-          <p>Four fields only: Amount, Date, Company, Description. Add and move on.</p>
-        </div>
-        <div class="feature">
-          <h3>Clean table view</h3>
-          <p>See your transactions at a glance right after saving.</p>
-        </div>
-        <div class="feature">
-          <h3>Free tier only</h3>
-          <p>No pricing page, no paywalls, no ads. Just free.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section wrap" id="privacy">
-      <h2>Privacy & security—in plain language</h2>
-      <div class="grid">
-        <div class="col-7">
-          <p class="lead">We keep things simple and respectful. Authentication is via Google. We don’t use your data for marketing. Always use a secure device and keep your Google account safe.</p>
-          <ul>
-            <li><strong>Authentication:</strong> Google sign‑in verifies you. No social posting, ever.</li>
-            <li><strong>Your entries:</strong> You record amount, date, company, description for your own tracking.</li>
-            <li><strong>Transport security:</strong> The site is served over HTTPS.</li>
-            <li><strong>Transparency:</strong> The codebase is public. Review it, file issues, contribute on GitHub.</li>
-          </ul>
-          <p>Questions about how your data is handled? Check the repository and open an issue.</p>
-        </div>
-        <div class="col-5">
-          <div class="card">
-            <h3 style="margin:8px 0 6px;">Open source</h3>
-            <p>Jacob Finance is developed in the open.</p>
-            <p style="margin-top:10px"><a class="cta secondary" href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">GitHub: Jacke1012/jacob-finance</a></p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section wrap" id="faq">
-      <h2>FAQ</h2>
-      <div class="faq">
-        <details>
-          <summary>Is the app really free?</summary>
-          <p>Yes. There’s a single free tier—no paid upgrades.</p>
-        </details>
-        <details>
-          <summary>What can I store per transaction?</summary>
-          <p>Exactly four fields: Amount, Date, Company, and Description.</p>
-        </details>
-        <details>
-          <summary>Do I need an account?</summary>
-          <p>You sign in with Google to authenticate yourself. No separate password is required.</p>
-        </details>
-        <details>
-          <summary>Can I see or edit my entries later?</summary>
-          <p>After saving, your transactions appear in a table for quick review. Editing is done with a simple click of the edit button</p>
-        </details>
-        <details>
-          <summary>Where can I report bugs or request features?</summary>
-          <p>Open an issue on <a href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">GitHub</a>.</p>
-        </details>
-      </div>
-    </section>
-
-    <section class="section wrap" id="cta">
-      <div class="card" style="display:flex; gap:16px; align-items:center; justify-content: space-between; flex-wrap: wrap;">
-        <div>
-          <h2 style="margin:0 0 6px;">Ready to log your first transaction?</h2>
-          <p class="lead" style="margin:0;">Open the app, sign in with Google, and add your first entry—it takes about 10 seconds.</p>
-        </div>
-        <div class="cta-row" style="margin:0;">
-          <a class="cta primary" href="https://finance.jacobsweb.link/" target="_blank" rel="noopener">Open the free app</a>
-          <a class="cta secondary" href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">See it on GitHub</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap foot">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div class="logo" aria-hidden="true"></div>
-        <span>Jacob Finance</span>
-      </div>
-      <div style="display:flex; gap:12px; flex-wrap: wrap;">
-        <a href="#top">How it works</a>
-        <a href="#features">Features</a>
-        <a href="#faq">FAQ</a>
-        <a href="https://finance.jacobsweb.link/" target="_blank" rel="noopener">Open App</a>
-        <a href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">GitHub</a>
-      </div>
-      <div>© <span id="y"></span> Jacob Finance • Free tier</div>
-    </div>
-  </footer>
-
-  <script>
-    // tiny year updater
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
+<header>
+<div class="wrap nav">
+<div class="brand"><div class="logo" aria-hidden="true"></div><span>Jacob Finance</span></div>
+<nav class="menu" aria-label="Primary">
+<a class="active" href="index.html">Home</a>
+<a href="how-it-works.html">How it works</a>
+<a href="features.html">Features</a>
+<a href="faq.html">FAQ</a>
+<a href="privacy.html">Privacy</a>
+<a href="https://app.finance.jacobsweb.link/" target="_blank" rel="noopener">Open App</a>
+<a href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">GitHub</a>
+</nav>
+</div>
+</header>
+<main>
+<section class="hero wrap">
+<h1>See your money clearly.</h1>
+<p class="sub">Record <strong>Amount</strong>, <strong>Date</strong>, <strong>Company</strong>, and <strong>Description</strong>—that’s it. Free forever. Google sign‑in for quick, secure access.</p>
+<div class="cta-row">
+<a class="cta primary" href="https://finance.jacobsweb.link/" target="_blank" rel="noopener">Open the free app</a>
+<a class="cta secondary" href="https://github.com/Jacke1012/jacob-finance" target="_blank" rel="noopener">View source on GitHub</a>
+</div>
+</section>
+<section class="section wrap">
+<div class="grid grid-3">
+<div class="feature"><h3>Google sign‑in</h3><p>Authenticate with Google. No extra passwords.</p></div>
+<div class="feature"><h3>Four fields only</h3><p>Amount, Date, Company, Description. Fast and focused.</p></div>
+<div class="feature"><h3>Free tier</h3><p><span class="badge">FREE</span> No paid plans, no ads.</p></div>
+</div>
+</section>
+<section class="section wrap">
+<div class="card">
+<h2 style="margin:0 0 6px;">What you can record</h2>
+<ul>
+<li><strong>Amount</strong> — e.g., <span class="mono">199.00</span></li>
+<li><strong>Date</strong> — the transaction date</li>
+<li><strong>Company</strong> — merchant or payer</li>
+<li><strong>Description</strong> — anything you want to remember</li>
+</ul>
+<p style="color:var(--muted)">No categories or budgets—just the core facts so you stay consistent.</p>
+</div>
+</section>
+</main>
+<footer>
+<div class="wrap foot">
+<div style="display:flex;align-items:center;gap:10px"><div class="logo" aria-hidden="true"></div><span>Jacob Finance</span></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<a href="how-it-works.html">How it works</a>
+<a href="features.html">Features</a>
+<a href="faq.html">FAQ</a>
+<a href="privacy.html">Privacy</a>
+<a href="https://finance.jacobsweb.link/" target="_blank">Open App</a>
+<a href="https://github.com/Jacke1012/jacob-finance" target="_blank">GitHub</a>
+</div>
+<div>© <span id="y"></span> Jacob Finance • Free tier</div>
+</div>
+</footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>

@@ -1,0 +1,53 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="JF – Jacob Finance">
+  <defs>
+    <!-- Diagonal blue→violet gradient -->
+    <linearGradient id="g" x1="16" y1="8" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+
+    <!-- Soft outer shadow for dark UIs -->
+    <filter id="drop" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dy="4"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.35 0"/>
+      <feBlend in="SourceGraphic" mode="normal"/>
+    </filter>
+
+    <!-- Subtle inner shadow for depth -->
+    <filter id="inner" x="-20%" y="-20%" width="140%" height="140%">
+      <feOffset dx="0" dy="1"/>
+      <feGaussianBlur stdDeviation="2"/>
+      <feComposite operator="arithmetic" k2="-1" k3="1" in2="SourceAlpha"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.25 0"/>
+      <feBlend in="SourceGraphic" mode="normal"/>
+    </filter>
+
+    <!-- Text glow to pop on dark headers -->
+    <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rounded gradient tile -->
+  <g filter="url(#drop)">
+    <rect x="8" y="8" width="112" height="112" rx="24" fill="url(#g)"/>
+    <!-- subtle border to match glossy card look -->
+    <rect x="8.5" y="8.5" width="111" height="111" rx="23.5" stroke="white" opacity="0.18"/>
+    <!-- gentle top highlight -->
+    <path d="M20 28c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v6c-25 8-75 8-100 0v-6z" fill="white" opacity="0.10"/>
+  </g>
+
+  <!-- JF letters -->
+  <g filter="url(#textGlow)">
+    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
+          font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+          font-weight="800" font-size="52" letter-spacing="0.5" fill="white">
+      JF
+    </text>
+  </g>
+</svg>
