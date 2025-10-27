@@ -17,8 +17,20 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
 # COPY app/ .
 # RUN composer dump-autoload --optimize --classmap-authoritative
 
+########## Stage 2: assets##########
+FROM alpine:3.22 AS assets
+RUN apk add --no-cache curl
+WORKDIR /assets
 
-########## Stage 2: runtime (nginx + php-fpm) ##########
+# Pin versions so builds are reproducible
+ARG BOOTSTRAP_URL=https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+ARG JQUERY_URL=https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js
+
+# Download CDN assets into the build image (not your repo)
+RUN curl -fsSL "$BOOTSTRAP_URL" -o bootstrap.min.css \
+ && curl -fsSL "$JQUERY_URL"    -o jquery.min.js
+
+########## Stage 3: runtime (nginx + php-fpm) ##########
 FROM alpine:3.22
 
 # Tiny runtime
@@ -49,6 +61,11 @@ COPY config/99-opcache.ini              /etc/php83/conf.d/99-opcache.ini
 # App
 COPY --chown=web:web app /var/www
 COPY --chown=web:web --from=vendor /app/vendor /var/www/vendor
+
+# Assets
+RUN mkdir -p /var/www/app/public/assets
+COPY --chown=web:web --from=assets /assets/bootstrap.min.css /var/www/app/public/assets/bootstrap.min.css
+COPY --chown=web:web --from=assets /assets/jquery.min.js     /var/www/app/public/assets/jquery.min.js
 
 USER web
 
