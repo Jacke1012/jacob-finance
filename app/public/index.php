@@ -99,6 +99,16 @@ require __DIR__ . '/php/auth_required.php';
     <script src="/index.js"></script>
     <script src="/sw_loader.js"></script>
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KDZLF102R8"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-KDZLF102R8');
+    </script>
+
 </body>
 
 </html>
