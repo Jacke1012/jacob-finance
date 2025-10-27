@@ -63,9 +63,9 @@ COPY --chown=web:web app /var/www
 COPY --chown=web:web --from=vendor /app/vendor /var/www/vendor
 
 # Assets
-RUN mkdir -p /var/www/app/public/assets
-COPY --chown=web:web --from=assets /assets/bootstrap.min.css /var/www/app/public/assets/bootstrap.min.css
-COPY --chown=web:web --from=assets /assets/jquery.min.js     /var/www/app/public/assets/jquery.min.js
+RUN mkdir -p /var/www/public/assets
+COPY --chown=web:web --from=assets /assets/bootstrap.min.css /var/www/public/assets/bootstrap.min.css
+COPY --chown=web:web --from=assets /assets/jquery.min.js     /var/www/public/assets/jquery.min.js
 
 USER web
 

@@ -8,8 +8,8 @@ const URLS_TO_CACHE = [
   '/index.html',
   '/index.js',
   '/sw_lite.js',
-  'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
-  'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'
+  '/assets/bootstrap.min.css',
+  '/assets/jquery.min.js'
 ];
 
 self.addEventListener('install', (event) => {
