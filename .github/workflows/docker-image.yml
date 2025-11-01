@@ -8,7 +8,7 @@ on:
     branches: [ "main" ]
 
 env:
-  IMAGE_BASE: jacob-finance   # <--- your base image name (repo path after your username)
+  IMAGE_BASE: finance   # <--- your base image name (repo path after your username)
 
 jobs:
   docker:
