@@ -6,7 +6,6 @@ require __DIR__ . '/php/auth_required.php';
 <html lang="en">
 
 <head>
-    <script src="gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance</title>
