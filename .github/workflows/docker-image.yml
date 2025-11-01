@@ -21,7 +21,7 @@ jobs:
           - name: app
             tag: app
             context: .
-            file: ./Dockerfile.app          # adjust if your file is named differently
+            file: ./Dockerfile          # adjust if your file is named differently
           # --- image 2: landing ---
           - name: landing
             tag: landing
