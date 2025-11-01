@@ -6,6 +6,7 @@ on:
     tags: [ "v*", "release-*" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:    
 
 env:
   IMAGE_BASE: finance   # <--- your base image name (repo path after your username)
