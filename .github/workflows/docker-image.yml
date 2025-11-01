@@ -1,4 +1,4 @@
-name: Build & Push Docker image
+name: Build & Push app + landing
 
 on:
   push:
@@ -7,52 +7,48 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
-
 env:
-  IMAGE_NAME: finance
+  IMAGE_BASE: jacob-finance   # <--- your base image name (repo path after your username)
 
 jobs:
   docker:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include:
+          # --- image 1: app ---
+          - name: app
+            tag: app
+            context: .
+            file: ./Dockerfile.app          # adjust if your file is named differently
+          # --- image 2: landing ---
+          - name: landing
+            tag: landing
+            context: ./landing              # adjust to the folder you build from
+            file: ./landing/Dockerfile      # adjust if needed
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
+      - name: Login to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Docker meta (tags & labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=sha
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and (maybe) push
+      - name: Build & push (${{ matrix.name }})
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_BASE }}:${{ matrix.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
