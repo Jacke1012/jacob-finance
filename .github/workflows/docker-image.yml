@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 env:
-  IMAGE_NAME: jacob-finance
+  IMAGE_NAME: finance
 
 jobs:
   docker:
