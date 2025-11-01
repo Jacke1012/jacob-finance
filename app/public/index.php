@@ -6,16 +6,7 @@ require __DIR__ . '/php/auth_required.php';
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KDZLF102R8"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-KDZLF102R8');
-    </script>
-    
+    <script src="gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance</title>
@@ -24,7 +15,6 @@ require __DIR__ . '/php/auth_required.php';
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
     <script src="/assets/jquery.min.js"></script>
     
-
     <meta name="color-scheme" content="dark">
     <meta id="theme-color" name="theme-color" content="#0b0b10">
 </head>
