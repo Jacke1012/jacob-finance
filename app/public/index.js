@@ -231,8 +231,13 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (expenses) {
                 loadMonthSummaryList(currentDate.getFullYear(), currentDate.getMonth() + 1);
-                loadWeekSummaryList()
+                //loadWeekSummaryList()
                 setCurrentTime();
+                let weekTotal = 0;
+                $.each(expenses, function (_, expense) {
+                    weekTotal += parseInt(expense.amount);
+                });
+                $("#week-summary").text("Week Summary: " + weekTotal + ".00");
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {
                     let description = expense.description ?? '';
@@ -266,7 +271,7 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (expenses) {
                 loadMonthSummaryList(currentDate.getFullYear(), currentDate.getMonth() + 1);
-                loadWeekSummaryList()
+                //loadWeekSummaryList()
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
                 $.each(expenses, function (index, expense) {

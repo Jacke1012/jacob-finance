@@ -19,12 +19,20 @@ if ($week_number == 1){
         SELECT e.amount
         FROM expenses e
         JOIN users u ON e.user_id = u.id
-        WHERE u.email=$1
-        AND EXTRACT(YEAR FROM e.date_time) = $2
-        AND (EXTRACT(WEEK FROM e.date_time) = $3
-        OR EXTRACT(WEEK FROM e.date_time) = $4)
+        WHERE u.email = $3
+        AND
+        (
+        EXTRACT(YEAR FROM e.date_time) = $1
+        AND EXTRACT(WEEK FROM e.date_time) = $2
+        )
+        OR
+        (
+        EXTRACT(YEAR FROM e.date_time) = $4
+        AND EXTRACT (MONTH FROM e.date_time) = 12
+        AND EXTRACT(WEEK FROM e.date_time) = $2
+        )
     ";
-    $result = pg_query_params($conn, $sql, [$userEmail, $year_input, $week_number, $prev_year]);
+    $result = pg_query_params($conn, $sql, [$year_input, $week_number, $userEmail, $prev_year]);
     if (!$result) {
         echo json_encode(["error" => pg_last_error($conn)]);
         pg_close($conn);
