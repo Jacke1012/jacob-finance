@@ -35,7 +35,7 @@ services:
       POSTGRES_USER: financeuser
       POSTGRES_PASSWORD: supersecret
     volumes:
-      - db_postgres:/var/lib/postgresql/data
+      - db_postgres:/var/lib/postgresql
 
 volumes:
   #db_mysql:

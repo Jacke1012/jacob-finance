@@ -52,6 +52,7 @@ RUN set -eux; \
                      /var/www /var/cache/nginx /var/lib/nginx;
 
 # Configs
+RUN touch /etc/nginx/ga_inject.conf
 COPY config/nginx.conf                  /etc/nginx/nginx.conf
 COPY config/supervisord.conf            /etc/supervisord.conf
 COPY config/php-fpm.d/www.conf          /etc/php83/php-fpm.d/www.conf

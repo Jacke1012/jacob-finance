@@ -14,7 +14,7 @@ $year_input = $_GET['year_input'] ?? null;
 header('Content-Type: application/json');
 
 if ($week_number == 1){
-    $prev_week = $week_number - 1;
+    $prev_year = $year_input - 1;
     $sql = "
         SELECT e.amount
         FROM expenses e
@@ -24,7 +24,7 @@ if ($week_number == 1){
         AND (EXTRACT(WEEK FROM e.date_time) = $3
         OR EXTRACT(WEEK FROM e.date_time) = $4)
     ";
-    $result = pg_query_params($conn, $sql, [$userEmail, $year_input, $week_number, $prev_week]);
+    $result = pg_query_params($conn, $sql, [$userEmail, $year_input, $week_number, $prev_year]);
     if (!$result) {
         echo json_encode(["error" => pg_last_error($conn)]);
         pg_close($conn);

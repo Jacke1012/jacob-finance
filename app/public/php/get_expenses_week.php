@@ -12,7 +12,7 @@ header('Cache-Control: private, max-age=0');
 header('Content-Type: application/json');
 
 if ($week_number == 1){
-    $prev_week = $week_number - 1;
+    $prev_year = $year_input - 1;
     $sql = "
         SELECT e.amount, e.company, e.date_time, e.id, e.description
         FROM expenses e
@@ -23,7 +23,7 @@ if ($week_number == 1){
         AND EXTRACT(WEEK FROM e.date_time) = $2
         ORDER BY e.date_time DESC
     ";
-    $result = pg_query_params($conn, $sql, [$year_input,$week_number,$userEmail,$prev_week]);
+    $result = pg_query_params($conn, $sql, [$year_input,$week_number, $userEmail, $prev_year]);
     if (!$result) {
         echo json_encode(["error" => pg_last_error($conn)]);
         pg_close($conn);
