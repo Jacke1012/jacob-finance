@@ -13,22 +13,43 @@ $year_input = $_GET['year_input'] ?? null;
 
 header('Content-Type: application/json');
 
-
-$sql = "
-    SELECT e.amount
-    FROM expenses e
-    JOIN users u ON e.user_id = u.id
-    WHERE u.email=$1
-    AND EXTRACT(YEAR FROM e.date_time) = $2
-    AND EXTRACT(WEEK FROM e.date_time) = $3
-";
-
-$result = pg_query_params($conn, $sql, [$userEmail, $year_input,$week_number]);
-if (!$result) {
-    echo json_encode(["error" => pg_last_error($conn)]);
-    pg_close($conn);
-    exit;
+if ($week_number == 1){
+    $prev_week = $week_number - 1;
+    $sql = "
+        SELECT e.amount
+        FROM expenses e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.email=$1
+        AND EXTRACT(YEAR FROM e.date_time) = $2
+        AND (EXTRACT(WEEK FROM e.date_time) = $3
+        OR EXTRACT(WEEK FROM e.date_time) = $4)
+    ";
+    $result = pg_query_params($conn, $sql, [$userEmail, $year_input, $week_number, $prev_week]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
 }
+else{
+    $sql = "
+        SELECT e.amount
+        FROM expenses e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.email=$1
+        AND EXTRACT(YEAR FROM e.date_time) = $2
+        AND EXTRACT(WEEK FROM e.date_time) = $3
+    ";
+
+    $result = pg_query_params($conn, $sql, [$userEmail, $year_input,$week_number]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
+}
+
+
 $amounts = [];
 while($row = pg_fetch_assoc($result)){
     $amounts[] = $row;

@@ -11,23 +11,44 @@ header('Cache-Control: private, max-age=0');
 
 header('Content-Type: application/json');
 
-
-$sql = "
-    SELECT e.amount, e.company, e.date_time, e.id, e.description
-    FROM expenses e
-    JOIN users u ON e.user_id = u.id
-    WHERE u.email = $3
-    AND EXTRACT(YEAR FROM e.date_time) = $1
-    AND EXTRACT(WEEK FROM e.date_time) = $2
-    ORDER BY e.date_time DESC
-";
-
-$result = pg_query_params($conn, $sql, [$year_input,$week_number,$userEmail]);
-if (!$result) {
-    echo json_encode(["error" => pg_last_error($conn)]);
-    pg_close($conn);
-    exit;
+if ($week_number == 1){
+    $prev_week = $week_number - 1;
+    $sql = "
+        SELECT e.amount, e.company, e.date_time, e.id, e.description
+        FROM expenses e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.email = $3
+        AND (EXTRACT(YEAR FROM e.date_time) = $1
+        OR EXTRACT(YEAR FROM e.date_time) = $4)
+        AND EXTRACT(WEEK FROM e.date_time) = $2
+        ORDER BY e.date_time DESC
+    ";
+    $result = pg_query_params($conn, $sql, [$year_input,$week_number,$userEmail,$prev_week]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
 }
+else{
+    $sql = "
+        SELECT e.amount, e.company, e.date_time, e.id, e.description
+        FROM expenses e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.email = $3
+        AND EXTRACT(YEAR FROM e.date_time) = $1
+        AND EXTRACT(WEEK FROM e.date_time) = $2
+        ORDER BY e.date_time DESC
+    ";
+
+    $result = pg_query_params($conn, $sql, [$year_input,$week_number,$userEmail]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
+}
+
 
 $expenses = [];
 while ($row = pg_fetch_assoc($result)) {
