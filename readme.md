@@ -8,6 +8,10 @@ Live examples:
 
 ---
 
+# Docker images
+Images public repo:
+- [Docker repo](https://hub.docker.com/r/jacke1012/finance)
+
 ## 🔍 Features
 
 - Web interface for viewing and managing transactions, budgets, accounts  
