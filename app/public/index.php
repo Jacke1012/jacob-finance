@@ -66,6 +66,9 @@ require __DIR__ . '/php/auth_required.php';
                     <button id="next-week" class="btn btn-primary">Next Week</button>
                 </div>
             </div>
+            <div>
+                <span id="current-date-interval">interval</span>
+            </div>
             <div style="padding-left: 20px;">
                 <input class="form-check-input" type="radio" id="week-radio" name="data-format" value="week" checked />
                 <label class="form-check-label" for="week-radio">Week</label>

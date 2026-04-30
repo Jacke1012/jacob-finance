@@ -33,7 +33,7 @@ $(document).ready(function () {
         dateInterval = [new Date(date), new Date(date)];
         weekDay = date.getDay();
         dateInterval[0].setDate(dateInterval[0].getDate() - weekDay + 1);
-        dateInterval[1].setDate(dateInterval[1].getDate() + (7 - weekDay + 1));
+        dateInterval[1].setDate(dateInterval[1].getDate() + (7 - weekDay));
         //console.log(dateInterval)
         return dateInterval;
     }
@@ -95,12 +95,17 @@ $(document).ready(function () {
     function updateWeekDisplay() {
         $('#current-week').text("Week " + currentWeek);
     }
+    function updateCurrentDateInterval() {
+        let dateArray = getWeekDates(currentDate)
+        $('#current-date-interval').text(dateArray[0].toDateString() + " to " + dateArray[1].toDateString());
+    }
 
     function ReloadDisplay() {
         edit_id = -1;
         currentWeek = getWeek(currentDate)
         updateMonthYearDisplay(currentDate);
         updateWeekDisplay();
+        updateCurrentDateInterval();
         if (currentDisplayFormat == Display_Formats.week) {
             loadExpensesWeek();
         }
@@ -146,7 +151,6 @@ $(document).ready(function () {
     }
 
     function loadWeekSummary() {
-        //dateInterval = getWeekDates(date);
         $.ajax({
             url: "../php/get_week_summary.php",
             type: "GET",
