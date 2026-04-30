@@ -45,7 +45,7 @@ self.addEventListener('fetch', (event) => {
         return fresh;
       } catch {
         // Serve cached shell when offline
-        const cachedShell = await caches.match('/index.html'); // or '/'
+        const cachedShell = await caches.match('/index.php'); // or '/'
         return cachedShell || new Response('Offline', { status: 503 });
       }
     })());
@@ -108,7 +108,7 @@ self.addEventListener('fetch', (event) => {
         const cached = await runtime.match(request);
         if (cached) return cached;
         // As a last resort serve the shell
-        const shell = await caches.match('/index.html');
+        const shell = await caches.match('/index.php');
         return shell || new Response('Offline', { status: 503 });
       }
     })());
