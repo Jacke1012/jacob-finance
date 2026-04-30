@@ -5,7 +5,7 @@ const RUNTIME_CACHE = 'expenses-runtime-v1'; // ★ separate runtime cache
 
 const URLS_TO_CACHE = [
   '/',
-  '/index.html',
+  '/index.php',
   '/index.js',
   '/sw_lite.js',
   '/assets/bootstrap.min.css',

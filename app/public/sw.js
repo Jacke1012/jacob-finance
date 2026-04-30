@@ -4,7 +4,7 @@ var CACHE_NAME = 'expenses_cache';
 // Specify the resources you want to cache
 var urlsToCache = [
   '/',
-  '/index.html',
+  '/index.php',
   '/index.js',
   '/sw.js',
   '/assets/bootstrap.min.css',
