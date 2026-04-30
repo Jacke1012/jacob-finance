@@ -31,7 +31,7 @@ RUN curl -fsSL "$BOOTSTRAP_URL" -o bootstrap.min.css \
  && curl -fsSL "$JQUERY_URL"    -o jquery.min.js
 
 ########## Stage 3: runtime (nginx + php-fpm) ##########
-FROM alpine:3.22
+FROM alpine:3.23
 
 # Tiny runtime
 RUN apk add --no-cache \
