@@ -8,7 +8,7 @@ return [
   'cookie_path' => '/',
   'cookie_secure' => true,       // HTTPS only in prod
   'cookie_httponly' => true,     // JS can't read it
-  'cookie_samesite' => 'Strict',    // 'Lax' or 'Strict'/'None' (None requires Secure)
+  'cookie_samesite' => 'Lax',    // 'Lax' or 'Strict'/'None' (None requires Secure)
   'ttl' => 48 * 60 * 60,
   'refresh_if_remaining' => 24 * 60 * 60,
   'absolute_ttl' => 168 * 60 * 60,
