@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 ########## Stage 1: install PHP deps with Composer ##########
-FROM composer:2 AS vendor
+FROM composer:2.9 AS vendor
 WORKDIR /app
 
 # Copy only what Composer needs first (better layer caching)
