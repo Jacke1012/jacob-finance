@@ -1,13 +1,12 @@
 // sw_lite.js
 
-const STATIC_CACHE = 'expenses-static-v3';
-const RUNTIME_CACHE = 'expenses-runtime-v1'; // ★ separate runtime cache
+const STATIC_CACHE = 'expenses-static-v4';
+const RUNTIME_CACHE = 'expenses-runtime-v4'; // ★ separate runtime cache
 
 const URLS_TO_CACHE = [
   '/',
   '/index.php',
   '/index.js',
-  '/sw_lite.js',
   '/assets/bootstrap.min.css',
   '/assets/jquery.min.js'
 ];

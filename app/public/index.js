@@ -38,6 +38,20 @@ $(document).ready(function () {
         return dateInterval;
     }
 
+    function getMonthDates(date) {
+        date.setHours(0, 0, 0, 0);
+
+        const year = date.getFullYear();
+        const month = date.getMonth();
+
+        const dateInterval = [
+            new Date(year, month, 1),
+            new Date(year, month + 1, 0)
+        ];
+
+        return dateInterval;
+    }
+
     function setCurrentTime() {
         $.ajax({
             url: '../php/currentTime.php', // Adjust the path to where you host your PHP script
@@ -85,6 +99,14 @@ $(document).ready(function () {
         return sum;
     }
 
+    function formatDateForPHP(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    }  
+
 
     //Display functions:
 
@@ -120,34 +142,23 @@ $(document).ready(function () {
     }
 
 
-    function loadMonthSummary(year, month) {
-        $.ajax({
-            url: '../php/get_month_summary.php', // Update this path
+    function loadSummaryList(dateInterval){
+        return $.ajax({
+            url: '../php/get_summary_list.php', // Update this path
             type: 'GET',
-            data: { year: year, month: month },
-            dataType: 'json',
-            success: function (summary) {
-                $("#month-summary").text("Month Summary: " + summary.month_summary);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching monthly summary: ", error);
-            }
+            data: { start_date: formatDateForPHP(dateInterval[0]), end_date: formatDateForPHP(dateInterval[1]) },
+            dataType: 'json'
         });
     }
 
-    function loadMonthSummaryList(year, month) {
-        $.ajax({
-            url: '../php/get_month_summary_list.php', // Update this path
-            type: 'GET',
-            data: { year: year, month: month },
-            dataType: 'json',
-            success: function (expenses_list) {
-                $("#month-summary").text("Month Summary: " + sumExpenses(expenses_list));
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching monthly summary: ", error);
-            }
-        });
+    function loadMonthSummaryList(date) {
+        loadSummaryList(getMonthDates(date))
+            .then(function (expensesList) {
+                $("#month-summary").text("Month Summary: " + sumExpenses(expensesList));
+            })
+            .catch(function (error) {
+                console.error("Error fetching summary:", error);
+            });
     }
 
     function loadWeekSummary() {
@@ -234,7 +245,7 @@ $(document).ready(function () {
             data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
             dataType: 'json',
             success: function (expenses) {
-                loadMonthSummaryList(currentDate.getFullYear(), currentDate.getMonth() + 1);
+                loadMonthSummaryList(currentDate);
                 //loadWeekSummaryList()
                 setCurrentTime();
                 let weekTotal = 0;
@@ -274,7 +285,7 @@ $(document).ready(function () {
             data: { year: year, month: month },
             dataType: 'json',
             success: function (expenses) {
-                loadMonthSummaryList(currentDate.getFullYear(), currentDate.getMonth() + 1);
+                loadMonthSummaryList(currentDate);
                 //loadWeekSummaryList()
                 setCurrentTime();
                 $('#expenses-table tbody').empty(); // Clear the table first
