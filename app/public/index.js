@@ -129,10 +129,10 @@ $(document).ready(function () {
         updateWeekDisplay();
         updateCurrentDateInterval();
         if (currentDisplayFormat == Display_Formats.week) {
-            loadExpensesWeek();
+            loadExpenses(getWeekDates(currentDate));
         }
         else if (currentDisplayFormat == Display_Formats.month) {
-            loadExpensesMonth(currentDate.getFullYear(), currentDate.getMonth() + 1)
+            loadExpenses(getMonthDates(currentDate));
         }
 
         $('#amount-txt').val("");
@@ -161,31 +161,14 @@ $(document).ready(function () {
             });
     }
 
-    function loadWeekSummary() {
-        $.ajax({
-            url: "../php/get_week_summary.php",
-            type: "GET",
-            data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
-            dataType: "json",
-            success: function (summary) {
-                $("#week-summary").text("Week Summary: " + summary.week_summary)
-            }
-        })
-    }
-
-    function loadWeekSummaryList() {
-        $.ajax({
-            url: '../php/get_week_summary_list.php', // Update this path
-            type: 'GET',
-            data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
-            dataType: 'json',
-            success: function (expenses_list) {
-                $("#week-summary").text("Week Summary: " + sumExpenses(expenses_list));
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching monthly summary: ", error);
-            }
-        });
+    function loadWeekSummaryList(date) {
+        loadSummaryList(getWeekDates(date))
+            .then(function (expensesList) {
+                $("#week-summary").text("Week Summary: " + sumExpenses(expensesList));
+            })
+            .catch(function (error) {
+                console.error("Error fetching summary:", error);
+            });
     }
 
 
@@ -232,6 +215,40 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 console.error("Error deleting expense: ", error);
+            }
+        });
+    }
+
+
+    function loadExpenses(dateInterval){
+        $.ajax({
+            url: '../php/get_expenses.php', // You need to replace this with the path to your PHP script
+            type: 'GET',
+            data: { start_date: formatDateForPHP(dateInterval[0]), end_date: formatDateForPHP(dateInterval[1]) },
+            dataType: 'json',
+            success: function (expenses) {
+                loadMonthSummaryList(currentDate);
+                loadWeekSummaryList(currentDate)
+                setCurrentTime();
+                $('#expenses-table tbody').empty(); // Clear the table first
+                $.each(expenses, function (index, expense) {
+                    let description = expense.description ?? '';
+                    let company = expense.company ?? '';
+                    $('#expenses-table tbody').append(
+                        '<tr>' +
+                            '<td>' + company + '</td>' +
+                            '<td>' + description + '</td>' +
+                            '<td>' + expense.date_time + '</td>' +
+                            '<td>' + expense.amount + '</td>' +
+                            '<td class="actions">' +
+                            '<div class="btn-group">' +
+                            '<button class="btn btn-primary edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
+                            '<button class="btn btn-primary delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
+                            '</div>' +
+                            '</td>' +
+                        '</tr>'
+                    );                
+                });
             }
         });
     }
