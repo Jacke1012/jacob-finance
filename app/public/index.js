@@ -53,18 +53,19 @@ $(document).ready(function () {
     }
 
     function setCurrentTime() {
-        $.ajax({
-            url: '../php/currentTime.php', // Adjust the path to where you host your PHP script
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                $('#date_time').val(response.currentTime);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching server time: ", error);
-            }
-        });
-    }
+        const now = new Date();
+
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const currentTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+
+        $('#date_time').val(currentTime);
+}
 
     function runOncePerHour() {
         sessionStorage.removeItem("edit_id");
@@ -253,81 +254,6 @@ $(document).ready(function () {
         });
     }
 
-
-    // Function to load expenses
-    function loadExpensesWeek() {
-        $.ajax({
-            url: '../php/get_expenses_week.php', 
-            type: 'GET',
-            data: { year_input: currentDate.getFullYear(), week_number: currentWeek },
-            dataType: 'json',
-            success: function (expenses) {
-                loadMonthSummaryList(currentDate);
-                //loadWeekSummaryList()
-                setCurrentTime();
-                let weekTotal = 0;
-                $.each(expenses, function (_, expense) {
-                    weekTotal += parseInt(expense.amount);
-                });
-                $("#week-summary").text("Week Summary: " + weekTotal + ".00");
-                $('#expenses-table tbody').empty(); // Clear the table first
-                $.each(expenses, function (index, expense) {
-                    let description = expense.description ?? '';
-                    let company = expense.company ?? '';
-                    $('#expenses-table tbody').append(
-                        '<tr>' +
-                            '<td>' + company + '</td>' +
-                            '<td>' + description + '</td>' +
-                            '<td>' + expense.date_time + '</td>' +
-                            '<td>' + expense.amount + '</td>' +
-                            '<td class="actions">' +
-                            '<div class="btn-group">' +
-                            '<button class="btn btn-primary edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
-                            '<button class="btn btn-primary delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
-                            '</div>' +
-                            '</td>' +
-                        '</tr>'
-                    );                
-                });
-            }
-        });
-
-    }
-
-    function loadExpensesMonth(year, month) {
-        //console.log(dateInterval[0].toLocaleString("sv-SE"))
-        $.ajax({
-            url: '../php/get_expenses_month.php', // You need to replace this with the path to your PHP script
-            type: 'GET',
-            data: { year: year, month: month },
-            dataType: 'json',
-            success: function (expenses) {
-                loadMonthSummaryList(currentDate);
-                //loadWeekSummaryList()
-                setCurrentTime();
-                $('#expenses-table tbody').empty(); // Clear the table first
-                $.each(expenses, function (index, expense) {
-                    let description = expense.description ?? '';
-                    let company = expense.company ?? '';
-                    $('#expenses-table tbody').append(
-                        '<tr>' +
-                            '<td>' + company + '</td>' +
-                            '<td>' + description + '</td>' +
-                            '<td>' + expense.date_time + '</td>' +
-                            '<td>' + expense.amount + '</td>' +
-                            '<td class="actions">' +
-                            '<div class="btn-group">' +
-                            '<button class="btn btn-primary edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
-                            '<button class="btn btn-primary delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
-                            '</div>' +
-                            '</td>' +
-                        '</tr>'
-                    );                
-                });
-            }
-        });
-
-    }
 
     $('#expense-form').submit(function (e) {
         e.preventDefault(); // Prevent default form submission
