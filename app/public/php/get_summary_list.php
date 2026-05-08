@@ -3,14 +3,14 @@ include 'db_connect.php'; // defines $conn and $mysql
 
 include 'functions.php';
 
-header('Cache-Control: private, max-age=10');
-
 
 $start_date  = $_GET['start_date']  ?? null;
 $end_date = $_GET['end_date'] ?? null;
 
 
 header('Content-Type: application/json');
+header('Cache-Control: no-store, private');
+
 
 if (!is_valid_date($start_date) || !is_valid_date($end_date)) {
     echo json_encode(["error" => "Invalid parameters"]);

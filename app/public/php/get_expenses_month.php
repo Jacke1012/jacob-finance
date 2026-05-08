@@ -6,7 +6,8 @@ $month = $_GET['month'] ?? null;
 
 
 header('Content-Type: application/json');
-header('Cache-Control: private, max-age=0');
+header('Cache-Control: no-store, private');
+
 
 // Basic validation
 if (!is_numeric($year) || !is_numeric($month)) {

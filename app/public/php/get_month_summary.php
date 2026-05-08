@@ -9,6 +9,7 @@ $month = $_GET['month'] ?? null;
 
 
 header('Content-Type: application/json');
+header('Cache-Control: no-store, private');
 
 if (!is_numeric($year) || !is_numeric($month)) {
     echo json_encode(["error" => "Invalid parameters"]);

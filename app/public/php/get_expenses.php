@@ -9,7 +9,8 @@ $end_date = $_GET['end_date'] ?? null;
 
 
 header('Content-Type: application/json');
-#header('Cache-Control: private, max-age=0');
+header('Cache-Control: no-store, private');
+
 
 if (!is_valid_date($start_date) || !is_valid_date($end_date)) {
     echo json_encode(["error" => "Invalid parameters"]);

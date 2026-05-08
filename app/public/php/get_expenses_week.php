@@ -7,7 +7,8 @@ $week_number = $_GET['week_number'] ?? null;
 $year_input = $_GET['year_input'] ?? null;
 
 
-header('Cache-Control: private, max-age=0');
+header('Cache-Control: no-store, private');
+
 
 header('Content-Type: application/json');
 

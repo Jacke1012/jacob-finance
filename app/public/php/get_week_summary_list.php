@@ -12,6 +12,8 @@ $year_input = $_GET['year_input'] ?? null;
 
 
 header('Content-Type: application/json');
+header('Cache-Control: no-store, private');
+
 
 if ($week_number == 1){
     $prev_year = $year_input - 1;
