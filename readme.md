@@ -4,7 +4,7 @@
 
 Live examples:  
 - 🌐 [finance.jacobsweb.link](https://finance.jacobsweb.link)  
-- 🌐 [app.finance.jacobsweb.link](https://app.finance.jacobsweb.link)  
+- 🌐 [app.jacobsweb.link](https://app.jacobsweb.link)  
 
 ---
 
