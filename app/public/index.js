@@ -65,7 +65,18 @@ $(document).ready(function () {
         const currentTime = `${year}-${month}-${day} ${hours}:${minutes}`;
 
         $('#date_time').val(currentTime);
-}
+    }
+    
+    function toDateTimeString(date){
+        const date_string = date.toDateString();
+
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        
+        const final_string = `${hours}:${minutes} ${date_string}`;
+
+        return final_string;
+    }
 
     function runOncePerHour() {
         sessionStorage.removeItem("edit_id");
@@ -235,11 +246,12 @@ $(document).ready(function () {
                 $.each(expenses, function (index, expense) {
                     let description = expense.description ?? '';
                     let company = expense.company ?? '';
+                    let date_time = new Date(expense.date_time.replace(" ", "T"));
                     $('#expenses-table tbody').append(
                         '<tr>' +
                             '<td>' + company + '</td>' +
                             '<td>' + description + '</td>' +
-                            '<td>' + expense.date_time + '</td>' +
+                            '<td>' + toDateTimeString(date_time) + '</td>' +
                             '<td>' + expense.amount + '</td>' +
                             '<td class="actions">' +
                             '<div class="btn-group">' +
