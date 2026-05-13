@@ -34,6 +34,7 @@ $(document).ready(function () {
         weekDay = date.getDay();
         dateInterval[0].setDate(dateInterval[0].getDate() - weekDay + 1);
         dateInterval[1].setDate(dateInterval[1].getDate() + (7 - weekDay));
+        dateInterval[1].setHours(23,59,59);
         //console.log(dateInterval)
         return dateInterval;
     }
