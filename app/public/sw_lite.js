@@ -4,7 +4,7 @@
 // Stores app files/assets that are known ahead of time.
 // Because static requests below use a cache-first strategy, bump this name
 // when cached app files change and you want old copies deleted.
-const STATIC_CACHE = 'expenses-static-v7';
+const STATIC_CACHE = 'expenses-static-v8';
 
 // Runtime cache:
 // Stores responses discovered while the app is running, mainly API responses.
