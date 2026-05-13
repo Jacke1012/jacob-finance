@@ -1,4 +1,6 @@
 <?php
+
+use Google\Service\CloudControlsPartnerService\Console;
 include 'db_connect.php'; // should define $conn and $mysql
 
 include 'functions.php';
@@ -6,6 +8,12 @@ include 'functions.php';
 
 $start_date  = $_GET['start_date']  ?? null;
 $end_date = $_GET['end_date'] ?? null;
+
+if ($end_date) {
+    $date = new DateTime($end_date);
+    $date->modify('+1 day');
+    $end_date = $date->format('Y-m-d');
+}
 
 
 header('Content-Type: application/json');
@@ -26,6 +34,7 @@ $sql = "
     ORDER BY e.date_time DESC
 ";
 $result = pg_query_params($conn, $sql, [$userEmail, $start_date, $end_date]);
+
 if (!$result) {
     echo json_encode(["error" => pg_last_error($conn)]);
     pg_close($conn);
