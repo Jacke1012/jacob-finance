@@ -65,8 +65,8 @@ jobs:
         env:
           K3S_WEBHOOK_URL: ${{ secrets.K3S_WEBHOOK_URL }}
           K3S_WEBHOOK_TOKEN: ${{ secrets.K3S_WEBHOOK_TOKEN }}
-          K3S_NAMESPACE: ${{ vars.K3S_NAMESPACE }}
-          K3S_DEPLOYMENTS: ${{ vars.K3S_DEPLOYMENTS }}
+          K3S_NAMESPACE: ${{ secrets.K3S_NAMESPACE }}
+          K3S_DEPLOYMENTS: ${{ secrets.K3S_DEPLOYMENTS }}
         run: |
           set -euo pipefail
 
