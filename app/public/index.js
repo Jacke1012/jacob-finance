@@ -69,14 +69,20 @@ $(document).ready(function () {
     }
     
     function toDateTimeString(date){
-        const date_string = date.toDateString();
+        const time = date.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+        });
 
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        
-        const final_string = `${hours}:${minutes} ${date_string}`;
-
-        return final_string;
+        const dateText = date.toLocaleDateString(undefined, {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+        });
+        const text = (`${time} ${dateText}`).replaceAll(',', '');
+        return text;
     }
 
     function runOncePerHour() {
@@ -124,15 +130,21 @@ $(document).ready(function () {
     //Display functions:
 
     function updateMonthYearDisplay(date) {
-        $('#current-month-year').text(date.toLocaleDateString('default', { month: 'long', year: 'numeric' }));
+        $('#current-month-year').text(date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }).replaceAll(',', ''));
     }
 
     function updateWeekDisplay() {
         $('#current-week').text("Week " + currentWeek);
     }
     function updateCurrentDateInterval() {
-        let dateArray = getWeekDates(currentDate)
-        $('#current-date-interval').text(dateArray[0].toDateString() + " to " + dateArray[1].toDateString());
+        const dateArray = getWeekDates(currentDate)
+        const options = {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        };
+        $('#current-date-interval').text(dateArray[0].toLocaleDateString(undefined, options).replaceAll(',', '') + " to " + dateArray[1].toLocaleDateString(undefined, options).replaceAll(',', ''));
     }
 
     function ReloadDisplay() {
