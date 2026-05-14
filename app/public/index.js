@@ -311,15 +311,11 @@ $(document).ready(function () {
 
     $('#prev-month').click(function () {
         currentDate.setMonth(currentDate.getMonth() - 1);
-        //updateMonthYearDisplay(currentDate);
-        //loadExpenses(currentDate.getFullYear(), currentDate.getMonth() + 1);
         ReloadDisplay();
     });
 
     $('#next-month').click(function () {
         currentDate.setMonth(currentDate.getMonth() + 1);
-        //updateMonthYearDisplay(currentDate);
-        //loadExpenses(currentDate.getFullYear(), currentDate.getMonth() + 1);
         ReloadDisplay();
     });
 
@@ -339,15 +335,11 @@ $(document).ready(function () {
 
     $('#prev-week').click(function () {
         currentDate.setDate(currentDate.getDate() - 7);
-        //updateWeekDisplay(currentDate);
-        //loadExpenses(currentDate.getFullYear(), currentDate.getMonth() + 1);
         ReloadDisplay();
     });
 
     $('#next-week').click(function () {
         currentDate.setDate(currentDate.getDate() + 7);
-        //updateWeekDisplay(currentDate);
-        //loadExpenses(currentDate.getFullYear(), currentDate.getMonth() + 1);
         ReloadDisplay();
     });
 

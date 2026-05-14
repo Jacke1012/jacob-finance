@@ -4,6 +4,8 @@
 
 require __DIR__ . '/auth_required.php';
 
+header('Cache-Control: no-store, private');
+
 $userEmail = $user['email'];
 
 $postgreshost = getenv('POSTGRES_HOST') ?: 'localhost';
