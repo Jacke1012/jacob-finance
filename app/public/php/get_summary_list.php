@@ -7,6 +7,12 @@ include 'functions.php';
 $start_date  = $_GET['start_date']  ?? null;
 $end_date = $_GET['end_date'] ?? null;
 
+if ($end_date) {
+    $date = new DateTime($end_date);
+    $date->modify('+1 day');
+    $end_date = $date->format('Y-m-d');
+}
+
 
 header('Content-Type: application/json');
 header('Cache-Control: no-store, private');
