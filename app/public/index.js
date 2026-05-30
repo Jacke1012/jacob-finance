@@ -17,7 +17,7 @@ $(document).ready(function () {
     ReloadDisplay()
 
     //remove old storage
-    sessionStorage.removeItem("lastRunTime");
+    localStorage.removeItem("lastRunTime");
 
 
     //Support Functions
