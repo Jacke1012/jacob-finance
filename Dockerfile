@@ -58,6 +58,8 @@ COPY config/supervisord.conf            /etc/supervisord.conf
 COPY config/php-fpm.d/www.conf          /etc/php83/php-fpm.d/www.conf
 COPY config/php-fpm.d/zz-env.conf       /etc/php83/php-fpm.d/zz-env.conf
 COPY config/99-opcache.ini              /etc/php83/conf.d/99-opcache.ini
+COPY docker-entrypoint.sh               /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # App
 COPY --chown=web:web app /var/www
@@ -75,4 +77,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
   CMD wget -qO- http://127.0.0.1:8080/ >/dev/null || exit 1
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
