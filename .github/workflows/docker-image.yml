@@ -53,7 +53,8 @@ jobs:
           tags: |
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_BASE }}:${{ matrix.tag }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha
+          #cache-to: type=gha,mode=max
 
   rollout:
     name: Trigger k3s rollout
