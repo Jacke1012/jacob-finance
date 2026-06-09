@@ -37,7 +37,6 @@ FROM alpine:3.23
 RUN apk add --no-cache \
     nginx php83 php83-fpm php83-opcache supervisor \
     php83-pgsql php83-openssl php83-sodium
-#php83-mysqli
 
 ARG APP_UID=10001
 ARG APP_GID=10001
