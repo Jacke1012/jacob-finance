@@ -113,8 +113,7 @@ $(document).ready(function () {
     function updateWeekDisplay() {
         $('#current-week').text("Week " + currentWeek);
     }
-    function updateCurrentDateInterval() {
-        const dateArray = getWeekDates(currentDate)
+    function updateCurrentDateInterval(dateArray) {
         const options = {
             weekday: 'short',
             month: 'short',
@@ -126,15 +125,16 @@ $(document).ready(function () {
 
     function ReloadDisplay() {
         edit_id = -1;
-        currentWeek = getWeek(currentDate)
+        currentWeek = getWeek(currentDate);
         updateMonthYearDisplay(currentDate);
         updateWeekDisplay();
-        updateCurrentDateInterval();
         if (currentDisplayFormat == Display_Formats.week) {
             loadExpenses(getWeekDates(currentDate));
+            updateCurrentDateInterval(getWeekDates(currentDate));
         }
         else if (currentDisplayFormat == Display_Formats.month) {
             loadExpenses(getMonthDates(currentDate));
+            updateCurrentDateInterval(getMonthDates(currentDate));
         }
 
         $('#amount-txt').val("");
@@ -170,10 +170,6 @@ $(document).ready(function () {
                 console.error("Error fetching summary:", error);
             });
     }
-
-
-
-
 
     //Click Actions
 
