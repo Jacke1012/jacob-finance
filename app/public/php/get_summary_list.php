@@ -7,6 +7,9 @@ include 'functions.php';
 $start_date  = $_GET['start_date']  ?? null;
 $end_date = $_GET['end_date'] ?? null;
 
+// Options: clientside, sqlside, serverside
+$summary_addition_mode = 'sqlside';
+
 if ($end_date) {
     $date = new DateTime($end_date);
     $date->modify('+1 day');
@@ -23,23 +26,72 @@ if (!is_valid_date($start_date) || !is_valid_date($end_date)) {
     exit;
 }
 
-$sql = "
-    SELECT e.amount
-    FROM expenses e
-    JOIN users u ON e.user_id = u.id
-    WHERE u.email=$1
-        AND e.date_time BETWEEN $2 AND $3
-";
+$amounts = [];
 
-$result = pg_query_params($conn, $sql, [$userEmail, $start_date, $end_date]);
-if (!$result) {
-    echo json_encode(["error" => pg_last_error($conn)]);
+if ($summary_addition_mode == 'clientside') {
+    $sql = "
+        SELECT e.amount
+        FROM expenses e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.email=$1
+            AND e.date_time BETWEEN $2 AND $3
+    ";
+
+    $result = pg_query_params($conn, $sql, [$userEmail, $start_date, $end_date]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
+
+    while($row = pg_fetch_assoc($result)){
+        $amounts[] = $row;
+    }
+} elseif ($summary_addition_mode == 'sqlside') {
+    $sql = "
+        SELECT COALESCE(SUM(e.amount), 0) AS amount
+        FROM expenses e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.email=$1
+            AND e.date_time BETWEEN $2 AND $3
+    ";
+
+    $result = pg_query_params($conn, $sql, [$userEmail, $start_date, $end_date]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
+
+    while($row = pg_fetch_assoc($result)){
+        $amounts[] = $row;
+    }
+} elseif ($summary_addition_mode == 'serverside') {
+    $sql = "
+        SELECT e.amount
+        FROM expenses e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.email=$1
+            AND e.date_time BETWEEN $2 AND $3
+    ";
+
+    $result = pg_query_params($conn, $sql, [$userEmail, $start_date, $end_date]);
+    if (!$result) {
+        echo json_encode(["error" => pg_last_error($conn)]);
+        pg_close($conn);
+        exit;
+    }
+
+    $total = 0;
+    while($row = pg_fetch_assoc($result)){
+        $total += $row['amount'];
+    }
+
+    $amounts[] = ["amount" => (string)$total];
+} else {
+    echo json_encode(["error" => "Invalid summary addition mode"]);
     pg_close($conn);
     exit;
-}
-$amounts = [];
-while($row = pg_fetch_assoc($result)){
-    $amounts[] = $row;
 }
 
 echo json_encode($amounts);
