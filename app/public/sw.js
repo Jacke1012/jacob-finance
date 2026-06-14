@@ -4,13 +4,7 @@
 // Stores app files/assets that are known ahead of time.
 // Because static requests below use a cache-first strategy, bump this name
 // when cached app files change and you want old copies deleted.
-const STATIC_CACHE = 'expenses-static-v17';
-
-// Runtime cache:
-// Stores responses discovered while the app is running, mainly API responses.
-// In this file, API requests are network-first, so this cache is mostly an
-// offline fallback instead of the primary source of data.
-const RUNTIME_CACHE = 'expenses-runtime-v1';
+const STATIC_CACHE = 'expenses-static-v18';
 
 // Files saved immediately when the service worker installs.
 // These are available later even if the network is unavailable.
@@ -42,11 +36,12 @@ self.addEventListener('activate', (event) => {
     // Look at all Cache Storage caches for this site.
     const keys = await caches.keys();
 
-    // Delete old cache versions, but keep the current static/runtime caches.
+    // Delete old cache versions and any previous runtime cache, but keep the
+    // current static cache.
     // This is why bumping STATIC_CACHE from v5 to v6 clears old static files.
     await Promise.all(
       keys
-        .filter(k => k !== STATIC_CACHE && k !== RUNTIME_CACHE)
+        .filter(k => k !== STATIC_CACHE)
         .map(k => caches.delete(k))
     );
 
@@ -123,38 +118,12 @@ self.addEventListener('fetch', (event) => {
 
   if (isApi) {
     // API strategy: network-first.
-    // Online: return fresh data from the server.
-    // Offline: fall back to the runtime cache if this response was cacheable.
+    // API responses are intentionally not cached.
     event.respondWith((async () => {
-      const runtime = await caches.open(RUNTIME_CACHE);
       try {
-        const response = await fetch(request, { credentials: 'include' });
-
-        // Do not cache private/no-store/authenticated responses.
-        // Your PHP endpoints often send "private", so most API responses will
-        // intentionally not be stored here.
-        const cc = response.headers.get('Cache-Control') || '';
-        const setCookie = response.headers.has('Set-Cookie');
-        const hasAuth = request.headers.has('Authorization');
-
-        const cacheable = response.ok &&
-          !setCookie &&
-          !hasAuth &&
-          !/(no-store|private)/i.test(cc);
-
-        // Save a copy only when the response looks safe to reuse offline.
-        if (cacheable) {
-          runtime.put(request, response.clone());
-        }
-        return response;
+        return await fetch(request, { credentials: 'include' });
       } catch {
-        // If the network is unavailable, use the last cached API response.
-        const cached = await runtime.match(request);
-        if (cached) return cached;
-
-        // As a last resort, return the app shell so the app can still open.
-        const shell = await caches.match('/index.php');
-        return shell || new Response('Offline', { status: 503 });
+        return new Response('Offline', { status: 503 });
       }
     })());
   }
