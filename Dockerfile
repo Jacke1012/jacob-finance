@@ -23,8 +23,12 @@ RUN apk add --no-cache curl
 WORKDIR /assets
 
 # Pin versions so builds are reproducible
-ARG BOOTSTRAP_URL=https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
-ARG JQUERY_URL=https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js
+#Old
+#ARG BOOTSTRAP_URL=https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+#ARG JQUERY_URL=https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js
+#New
+ARG BOOTSTRAP_URL=https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css
+ARG JQUERY_URL=https://code.jquery.com/jquery-4.0.0.min.js
 
 # Download CDN assets into the build image (not your repo)
 RUN curl -fsSL "$BOOTSTRAP_URL" -o bootstrap.min.css \
