@@ -8,7 +8,9 @@ $start_date  = $_GET['start_date']  ?? null;
 $end_date = $_GET['end_date'] ?? null;
 
 // Options: clientside, sqlside, serverside
-$summary_addition_mode = 'sqlside';
+//$summary_addition_mode = 'sqlside';
+$summary_addition_mode = getenv('SUMMARY_MODE') ?: 'clientside';
+
 
 if ($end_date) {
     $date = new DateTime($end_date);

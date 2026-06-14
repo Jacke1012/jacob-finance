@@ -87,11 +87,16 @@ $(document).ready(function () {
     }
 
     function sumExpenses(expense_list){
+        const start = performance.now();
+
         let sum = 0
             expense_list.forEach(expense => {
                 sum += +expense.amount
             });
         sum = sum.toFixed(2);
+        
+        console.log(`sumExpenses took ${performance.now() - start} ms`);
+
         return sum;
     }
 
