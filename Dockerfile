@@ -18,7 +18,7 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
 # RUN composer dump-autoload --optimize --classmap-authoritative
 
 ########## Stage 2: assets##########
-FROM alpine:3.23 AS assets
+FROM alpine:3.24 AS assets
 RUN apk add --no-cache curl
 WORKDIR /assets
 
@@ -31,7 +31,7 @@ RUN curl -fsSL "$BOOTSTRAP_URL" -o bootstrap.min.css \
  && curl -fsSL "$JQUERY_URL"    -o jquery.min.js
 
 ########## Stage 3: runtime (nginx + php-fpm) ##########
-FROM alpine:3.23
+FROM alpine:3.24
 
 # Tiny runtime
 RUN apk add --no-cache \
