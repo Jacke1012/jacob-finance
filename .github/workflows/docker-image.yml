@@ -52,9 +52,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_BASE }}:${{ matrix.tag }}
-          cache-from: type=gha
-          cache-to: type=gha
-          #cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,scope=${{ matrix.name }},mode=max
 
   rollout:
     name: Trigger k3s rollout
