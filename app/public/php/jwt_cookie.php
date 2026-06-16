@@ -11,44 +11,44 @@ function auth_config() {
 }
 
 function issue_jwt(array $claims): string {
-  $c = auth_config();
+  $config = auth_config();
   $now = time();
   $payload = array_merge([
-    'iss' => $c['iss'],
-    'aud' => $c['aud'],
+    'iss' => $config['iss'],
+    'aud' => $config['aud'],
     'iat' => $now,
-    'exp' => $now + $c['ttl'],
+    'exp' => $now + $config['ttl'],
   ], $claims);
-  return JWT::encode($payload, $c['jwt_secret'], 'HS256');
+  return JWT::encode($payload, $config['jwt_secret'], 'HS256');
 }
 
 function verify_jwt(string $jwt): object {
-  $c = auth_config();
-  return JWT::decode($jwt, new Key($c['jwt_secret'], 'HS256'));
+  $config = auth_config();
+  return JWT::decode($jwt, new Key($config['jwt_secret'], 'HS256'));
 }
 
 function set_auth_cookie(string $jwt): void {
-  $c = auth_config();
+  $config = auth_config();
   $params = [
-    'expires'  => time() + $c['ttl'],
-    'path'     => $c['cookie_path'],
-    'domain'   => $c['cookie_domain'] ?: null,
-    'secure'   => $c['cookie_secure'],
-    'httponly' => $c['cookie_httponly'],
-    'samesite' => $c['cookie_samesite'],
+    'expires'  => time() + $config['ttl'],
+    'path'     => $config['cookie_path'],
+    'domain'   => $config['cookie_domain'] ?: null,
+    'secure'   => $config['cookie_secure'],
+    'httponly' => $config['cookie_httponly'],
+    'samesite' => $config['cookie_samesite'],
   ];
-  setcookie($c['cookie_name'], $jwt, $params);
+  setcookie($config['cookie_name'], $jwt, $params);
 }
 
 function clear_auth_cookie(): void {
-  $c = auth_config();
-  setcookie($c['cookie_name'], '', [
+  $config = auth_config();
+  setcookie($config['cookie_name'], '', [
     'expires' => time() - 3600,
-    'path'    => $c['cookie_path'],
-    'domain'  => $c['cookie_domain'] ?: null,
-    'secure'  => $c['cookie_secure'],
-    'httponly'=> $c['cookie_httponly'],
-    'samesite'=> $c['cookie_samesite'],
+    'path'    => $config['cookie_path'],
+    'domain'  => $config['cookie_domain'] ?: null,
+    'secure'  => $config['cookie_secure'],
+    'httponly'=> $config['cookie_httponly'],
+    'samesite'=> $config['cookie_samesite'],
   ]);
 }
 

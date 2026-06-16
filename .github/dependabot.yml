@@ -3,8 +3,7 @@ updates:
   - package-ecosystem: composer
     directory: /app
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "08:00"
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
@@ -17,8 +16,7 @@ updates:
   - package-ecosystem: docker
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "08:00"
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
@@ -26,8 +24,7 @@ updates:
   - package-ecosystem: docker
     directory: /landing
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "08:00"
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
@@ -35,8 +32,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "08:00"
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
