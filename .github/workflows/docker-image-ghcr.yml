@@ -1,4 +1,4 @@
-name: Build & Push app + landing
+name: Build & Push app + landing GHCR
 
 on:
   push:
