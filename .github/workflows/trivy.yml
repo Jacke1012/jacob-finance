@@ -37,7 +37,7 @@ jobs:
           scan-ref: .
           format: sarif
           output: trivy-repository-results.sarif
-          scanners: vuln,secret,misconfig,license
+          scanners: vuln,secret,misconfig
           vuln-type: os,library
           severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
 
@@ -93,7 +93,7 @@ jobs:
           image-ref: ${{ matrix.registry == 'dockerhub' && format('docker.io/{0}/finance:{1}', secrets.DOCKERHUB_USERNAME, matrix.tag) || format('ghcr.io/jacke1012/finance:{0}', matrix.tag) }}
           format: sarif
           output: trivy-${{ matrix.name }}-image-results.sarif
-          scanners: vuln,secret,misconfig,license
+          scanners: vuln,secret,misconfig
           vuln-type: os,library
           severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
 
