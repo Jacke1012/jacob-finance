@@ -15,7 +15,7 @@ on:
       - ".github/workflows/composer-audit.yml"
   workflow_dispatch:
   schedule:
-    - cron: "55 15 * * *"
+    - cron: "00 08 * * *"
 
 permissions:
   contents: read
