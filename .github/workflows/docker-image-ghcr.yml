@@ -11,6 +11,8 @@ env:
   IMAGE_OWNER: jacke1012
   IMAGE_BASE: finance   # repo path after the owner
 
+permissions: {}
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -65,6 +67,7 @@ jobs:
     name: Trigger k3s rollout
     runs-on: ubuntu-latest
     needs: docker
+    permissions: {}
     if: github.event_name != 'pull_request'
 
     steps:
