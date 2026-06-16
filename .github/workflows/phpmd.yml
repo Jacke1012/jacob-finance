@@ -48,11 +48,20 @@ jobs:
           tools: phpmd
 
       - name: Run PHPMD
-        run: phpmd app/public,app/bin sarif cleancode,codesize,controversial,design,naming,unusedcode --reportfile phpmd-results.sarif
-        continue-on-error: true
+        run: |
+          set +e
+          phpmd app/public,app/bin sarif cleancode,codesize,controversial,design,naming,unusedcode --reportfile phpmd-results.sarif
+          status=$?
+
+          if [ "$status" -eq 2 ]; then
+            echo "PHPMD found issues; uploading SARIF results."
+            exit 0
+          fi
+
+          exit "$status"
 
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: phpmd-results.sarif
           wait-for-processing: true
