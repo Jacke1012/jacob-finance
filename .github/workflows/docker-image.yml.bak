@@ -7,16 +7,11 @@ on:
   workflow_dispatch:    
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_OWNER: jacke1012
-  IMAGE_BASE: finance   # repo path after the owner
+  IMAGE_BASE: finance   # <--- your base image name (repo path after your username)
 
 jobs:
   docker:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     strategy:
       matrix:
@@ -40,13 +35,12 @@ jobs:
 
       - uses: docker/setup-buildx-action@v4
 
-      - name: Login to GHCR
+      - name: Login to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v4
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build & push (${{ matrix.name }})
         uses: docker/build-push-action@v7
@@ -56,8 +50,7 @@ jobs:
           platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_BASE }}:${{ matrix.tag }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_BASE }}:${{ matrix.tag }}-${{ github.sha }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_BASE }}:${{ matrix.tag }}
           cache-from: type=gha,scope=${{ matrix.name }}
           cache-to: type=gha,scope=${{ matrix.name }},mode=max
 
@@ -94,8 +87,8 @@ jobs:
             "namespace": "${K3S_NAMESPACE}",
             "deployments": "${K3S_DEPLOYMENTS}",
             "images": [
-              "${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_BASE }}:app-${GITHUB_SHA}",
-              "${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_BASE }}:landing-${GITHUB_SHA}"
+              "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_BASE }}:app",
+              "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_BASE }}:landing"
             ]
           }
           JSON
