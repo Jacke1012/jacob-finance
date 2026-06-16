@@ -15,8 +15,8 @@ if ($env === 'dev') {
   return; // Skip the rest of the auth logic
 }
 
-$c = auth_config();
-$cookie = $_COOKIE[$c['cookie_name']] ?? null;
+$config = auth_config();
+$cookie = $_COOKIE[$config['cookie_name']] ?? null;
 
 if (!$cookie) {
   header('Location: /php/login.php');  // or 401 JSON for APIs
@@ -32,14 +32,14 @@ try {
 }
 
 // Optional: enforce iss/aud in case config changed
-if (($token->iss ?? '') !== $c['iss'] || ($token->aud ?? '') !== $c['aud']) {
+if (($token->iss ?? '') !== $config['iss'] || ($token->aud ?? '') !== $config['aud']) {
   clear_auth_cookie();
   header('Location: /php/login.php');
   exit;
 }
 
 // Sliding refresh: if < refresh window, reissue a new cookie
-if (remaining_ttl($token) < $c['refresh_if_remaining']) {
+if (remaining_ttl($token) < $config['refresh_if_remaining']) {
   $jwt = issue_jwt([
     'email'   => $token->email,
     'name'    => $token->name ?? null,
