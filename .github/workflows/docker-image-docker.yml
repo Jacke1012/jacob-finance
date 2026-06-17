@@ -1,9 +1,9 @@
 name: Build & Push app + landing Docker
 
 on:
-  push:
-    branches: [ "main" ]
-    tags: [ "v*", "release-*" ]
+  #push:
+  #  branches: [ "main" ]
+  #  tags: [ "v*", "release-*" ]
   workflow_dispatch:    
 
 env:
