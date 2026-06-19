@@ -231,20 +231,34 @@ $(document).ready(function () {
                     let description = expense.description ?? '';
                     let company = expense.company ?? '';
                     let date_time = new Date(expense.date_time.replace(" ", "T"));
-                    $('#expenses-table tbody').append(
-                        '<tr>' +
-                            '<td>' + company + '</td>' +
-                            '<td>' + description + '</td>' +
-                            '<td>' + toDateTimeString(date_time) + '</td>' +
-                            '<td>' + expense.amount + '</td>' +
-                            '<td class="actions">' +
-                            '<div class="btn-group">' +
-                            '<button class="btn btn-primary edit-expense-btn" data-id="' + expense.id + '">Edit</button>' + 
-                            '<button class="btn btn-primary delete-expense-btn" data-id="' + expense.id + '">Delete</button>' +
-                            '</div>' +
-                            '</td>' +
-                        '</tr>'
-                    );                
+                    const $row = $('<tr>');
+
+                    $row.append($('<td>').text(company));
+                    $row.append($('<td>').text(description));
+                    $row.append($('<td>').text(toDateTimeString(date_time)));
+                    $row.append($('<td>').text(expense.amount));
+
+                    const $actions = $('<td>').addClass('actions');
+                    const $btnGroup = $('<div>').addClass('btn-group');
+
+                    $btnGroup.append(
+                        $('<button>')
+                            .addClass('btn btn-primary edit-expense-btn')
+                            .attr('data-id', expense.id)
+                            .text('Edit')
+                    );
+
+                    $btnGroup.append(
+                        $('<button>')
+                            .addClass('btn btn-primary delete-expense-btn')
+                            .attr('data-id', expense.id)
+                            .text('Delete')
+                    );
+
+                    $actions.append($btnGroup);
+                    $row.append($actions);
+
+                    $('#expenses-table tbody').append($row);
                 });
             }
         });
