@@ -23,10 +23,6 @@ $(document).ready(function () {
 
     ReloadDisplay()
 
-    //remove old storage
-    localStorage.removeItem("lastRunTime");
-
-
     //Support Functions
     function getWeek(date) {
         date.setHours(0, 0, 0, 0);

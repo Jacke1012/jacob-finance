@@ -4,7 +4,7 @@
 // Stores app files/assets that are known ahead of time.
 // Because static requests below use a cache-first strategy, bump this name
 // when cached app files change and you want old copies deleted.
-const STATIC_CACHE = 'expenses-static-v20';
+const STATIC_CACHE = 'expenses-static-v21';
 
 // Files saved immediately when the service worker installs.
 // These are available later even if the network is unavailable.
