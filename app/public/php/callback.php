@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/jwt_cookie.php';
+require __DIR__ . '/csrf.php';
 
 
 $client = new Google_Client();
@@ -13,6 +14,8 @@ if (!isset($_GET['code'])) {
     echo "Missing authorization code.";
     exit;
 }
+
+require_oauth_state($_GET['state'] ?? null);
 
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
 if (isset($token['error'])) {

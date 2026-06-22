@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/csrf.php';
 
 $client = new Google_Client();
 $client->setClientId(getenv('GOOGLE_CLIENT_ID'));
@@ -9,6 +10,7 @@ $client->setScopes(['openid','email','profile']);
 $client->setPrompt('select_account');
 $client->setAccessType('online'); // or 'offline' if you need refresh tokens
 $client->setIncludeGrantedScopes(true);
+$client->setState(oauth_state_token());
 
 $authUrl = $client->createAuthUrl();
 header('Location: ' . $authUrl);

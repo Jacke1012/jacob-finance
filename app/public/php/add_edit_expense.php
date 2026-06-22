@@ -1,4 +1,12 @@
 <?php
+require_once __DIR__ . '/csrf.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+require_csrf_token();
 include 'db_connect.php'; // Include your DB connection
 
 $date_time   = $_POST['date_time'] ?? null;

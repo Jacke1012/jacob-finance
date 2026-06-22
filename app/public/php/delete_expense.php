@@ -1,9 +1,16 @@
 <?php
-include 'db_connect.php'; // defines $conn and $mysql
+require_once __DIR__ . '/csrf.php';
 
 header('Content-Type: application/json');
 header('Cache-Control: private, max-age=0');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
+require_csrf_token();
+include 'db_connect.php'; // defines $conn and $mysql
 
 $expenseId = $_POST['id'] ?? null;
 

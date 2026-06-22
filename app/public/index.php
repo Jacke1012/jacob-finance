@@ -1,6 +1,8 @@
 <?php
 require __DIR__ . '/php/auth_required.php';
+require __DIR__ . '/php/csrf.php';
 
+$csrfToken = csrf_token();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +18,7 @@ require __DIR__ . '/php/auth_required.php';
     
     <meta name="color-scheme" content="dark">
     <meta id="theme-color" name="theme-color" content="#0b0b10">
+    <meta name="csrf-token" content="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
 </head>
 
 <body>
