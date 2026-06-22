@@ -1,8 +1,15 @@
 <?php
 // config/auth.php
+$env = getenv('APP_ENV') ?: 'prod';
+$jwtSecret = getenv('JWT_SECRET') ?: '';
+
+if ($env !== 'dev' && $jwtSecret === '') {
+  throw new RuntimeException('JWT_SECRET is required when APP_ENV is not dev.');
+}
+
 return [
   // keep in a Kubernetes Secret and inject via env
-  'jwt_secret' => getenv('JWT_SECRET') ?: 'dev-only-change-me',
+  'jwt_secret' => $jwtSecret !== '' ? $jwtSecret : 'dev-only-change-me',
   'cookie_name' => 'financeauth',
   'cookie_domain' => 'app.jacobsweb.link',         // e.g. '.jacobsweb.link' if you need subdomains
   'cookie_path' => '/',
@@ -19,4 +26,3 @@ return [
 //kubectl create secret generic finance-secrets \
 // --from-literal=jwt-secret=$(openssl rand -hex 32) \
 // -n finance
-
