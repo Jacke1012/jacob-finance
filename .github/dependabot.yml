@@ -8,10 +8,13 @@ updates:
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
     groups:
-      composer-minor-and-patch:
-        update-types:
-          - minor
-          - patch
+      composer-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      composer-all:
+        patterns:
+          - "*"
 
   - package-ecosystem: docker
     directory: /
@@ -20,6 +23,14 @@ updates:
       time: "08:00"
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
+    groups:
+      docker-root-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      docker-root-all:
+        patterns:
+          - "*"
 
   - package-ecosystem: docker
     directory: /landing
@@ -28,6 +39,14 @@ updates:
       time: "08:00"
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
+    groups:
+      docker-landing-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      docker-landing-all:
+        patterns:
+          - "*"
 
   - package-ecosystem: github-actions
     directory: /
@@ -37,7 +56,10 @@ updates:
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
     groups:
-      actions-minor-and-patch:
-        update-types:
-          - minor
-          - patch
+      actions-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      actions-all:
+        patterns:
+          - "*"
