@@ -32,7 +32,7 @@ jobs:
             file: ./landing/Dockerfile      # adjust if needed
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       #Only needed for multi aritecture builds
       #- uses: docker/setup-qemu-action@v3
