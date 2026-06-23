@@ -1,6 +1,5 @@
 <?php
 
-use Google\Service\CloudControlsPartnerService\Console;
 include 'db_connect.php'; // should define $conn and $mysql
 
 include 'functions.php';
