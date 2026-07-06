@@ -14,12 +14,16 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '00 08 * * *'
+  workflow_run:
+    workflows: [ "Build & Push app + landing GHCR" ]
+    types: [ completed ]
 
 permissions:
   contents: read
 
 jobs:
   repository:
+    if: github.event_name != 'workflow_run'
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
@@ -48,6 +52,12 @@ jobs:
           category: trivy-repository
 
   images:
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        github.event_name == 'schedule' ||
+        (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+      }}
     permissions:
       contents: read
       packages: read # for scanning GHCR images with GITHUB_TOKEN
