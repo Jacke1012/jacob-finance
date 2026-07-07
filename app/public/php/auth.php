@@ -10,8 +10,8 @@ if ($env !== 'dev' && $jwtSecret === '') {
 return [
   // keep in a Kubernetes Secret and inject via env
   'jwt_secret' => $jwtSecret !== '' ? $jwtSecret : 'dev-only-change-me',
-  'cookie_name' => 'financeauth',
-  'cookie_domain' => 'app.jacobsweb.link',         // e.g. '.jacobsweb.link' if you need subdomains
+  'cookie_name' => '__Host-financeauth',
+  'cookie_domain' => '',         // Keep empty for a host-only __Host- cookie.
   'cookie_path' => '/',
   'cookie_secure' => true,       // HTTPS only in prod
   'cookie_httponly' => true,     // JS can't read it
