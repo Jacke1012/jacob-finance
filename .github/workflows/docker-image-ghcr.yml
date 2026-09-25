@@ -114,7 +114,7 @@ jobs:
   rollout:
     name: Trigger k3s rollout
     runs-on: ubuntu-latest
-    needs: [ docker, scan-images ]
+    needs: docker
     permissions: {}
     if: github.event_name != 'pull_request'
 
